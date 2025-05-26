@@ -1288,10 +1288,13 @@ jQuery(document).ready(function($){
             filename:     'Loan_Calculator_'+date_time+".pdf",
          //   image:        { type: 'jpeg', quality: 1 },
           //  html2canvas:  { scale: 2, logging: false },
-            image: { type: 'jpeg', quality: 1 }, // Already set to maximum
+            image: { type: 'png', quality: 100 }, // Already set to maximum
             html2canvas: { 
-                scale: 3, // Try increasing from 2 to 3
-                useCORS: true // Ensure this is added
+                 useCORS: true, // Ensure this is added
+                 logging: false,                 
+                allowTaint: true, // If CORS fails
+                letterRendering: true, // Better text & image rendering
+                scale: 5, // ↑ Increase from 2 to 4 (max recommended) 
             },
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
         });

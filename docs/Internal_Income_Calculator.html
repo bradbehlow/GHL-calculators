@@ -668,9 +668,73 @@
       .ms-cl .table-control:focus {
         outline: none;
       }
+
+      .qr-promo-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        margin: 30px auto;
+        max-width: 600px;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .qr-promo-content {
+        text-align: center;
+        padding: 20px;
+      }
+
+      .qr-title {
+        font-size: 1.8rem;
+        color: #2c3e50;
+        margin-bottom: 10px;
+        font-weight: 600;
+      }
+
+      .qr-subtitle {
+        font-size: 1.1rem;
+        color: #7f8c8d;
+        margin-bottom: 20px;
+      }
+
+      .qr-image-container {
+        padding: 15px;
+        background: white;
+        border-radius: 10px;
+        display: inline-block;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      }
+
+      .qr-image {
+        width: 180px;
+        height: 180px;
+        object-fit: contain;
+      }
+
+      /* Hide on mobile devices */
+      @media (max-width: 768px) {
+        .qr-promo-container {
+          display: none;
+        }
+      }
     </style>
     <div class="ms-cl" id="ms_cl">
       <div class="container cl-wrapper">
+        <div class="qr-promo-container">
+          <div class="qr-promo-content">
+            <h2 class="qr-title">Open with Mobile</h2>
+            <p class="qr-subtitle">Scan the QR code below</p>
+            <div class="qr-image-container">
+              <img
+                src="https://res.cloudinary.com/dmdaa1heq/image/upload/v1749653363/QR_Mortgage_Calculators_1_zm6jhn.png"
+                alt="Scan QR Code"
+                class="qr-image"
+              />
+            </div>
+          </div>
+        </div>
         <div class="row">
           <div class="col-md-12">
             <div class="option-sec">
@@ -4180,6 +4244,7 @@
         </div>
       </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/autonumeric@4.5.4"></script>
     <script>
       jQuery(($) => {

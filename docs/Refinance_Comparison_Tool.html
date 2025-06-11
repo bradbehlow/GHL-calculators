@@ -641,7 +641,7 @@
             <div class="col-md-12 cl-left-div">
                 <p class="text-center">
                     <img class="top-logo" src="https://msgsndr-private.storage.googleapis.com/companyPhotos/2d9246fe-8a1e-4c40-87ef-576ce1f5ec7f.png" alt="" srcset="">
-                    <center>NMLS#2322797</center>
+                   
                     
                 </p>
                 <div class="row">
@@ -1044,12 +1044,10 @@
 </div>
 <div id="pdf_section">
     <div id="pdf_data">
-        <p class="text-center">
-            <img class="top-logo" id="my_logo" src="https://msgsndr-private.storage.googleapis.com/companyPhotos/2d9246fe-8a1e-4c40-87ef-576ce1f5ec7f.png" alt="" srcset="">
+       <p class="text-center">
+            <img class="top-logo" id="my_logo" src="https://res.cloudinary.com/dmdaa1heq/image/upload/v1748271556/Konnectd_Logo_Reversed_el4sw9.png" alt="" srcset="">
         </p>
-        <p class="text-center" style="color: #000;font-size: 12px;">
-            NMLS# 2322797
-        </p>
+      
         <div id="loan_sec">
             <table class="table">
                 <thead>
@@ -1288,8 +1286,15 @@ jQuery(document).ready(function($){
             margin:       10,
             enableLinks:  true,
             filename:     'Loan_Calculator_'+date_time+".pdf",
-            image:        { type: 'jpeg', quality: 1 },
-            html2canvas:  { scale: 2, logging: false },
+            image: { type: 'png', quality: 10 }, // Already set to maximum
+            html2canvas: {              
+                 useCORS: true, // Ensure this is added
+                 logging: false,                 
+                allowTaint: true, // If CORS fails
+                letterRendering: true, // Better text & image rendering
+                scale: 5, // ↑ Increase from 2 to 4 (max recommended) 
+          },
+           // html2canvas:  { scale: 2, logging: false },
             jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
         });
     }

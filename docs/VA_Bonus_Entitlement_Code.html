@@ -517,6 +517,56 @@
     width: 200px;
     margin-top: -32px;
   }
+  .qr-promo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    margin: 30px auto;
+    max-width: 600px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .qr-promo-content {
+    text-align: center;
+    padding: 20px;
+  }
+
+  .qr-title {
+    font-size: 1.8rem;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+
+  .qr-subtitle {
+    font-size: 1.1rem;
+    color: #7f8c8d;
+    margin-bottom: 20px;
+  }
+
+  .qr-image-container {
+    padding: 15px;
+    background: white;
+    border-radius: 10px;
+    display: inline-block;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  }
+
+  .qr-image {
+    width: 180px;
+    height: 180px;
+    object-fit: contain;
+  }
+
+  /* Hide on mobile devices */
+  @media (max-width: 768px) {
+    .qr-promo-container {
+      display: none;
+    }
+  }
 </style>
 <div id="hm2_cl">
   <div class="container cl-wrapper">

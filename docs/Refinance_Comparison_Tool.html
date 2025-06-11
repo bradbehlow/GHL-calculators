@@ -1044,8 +1044,8 @@
 </div>
 <div id="pdf_section">
     <div id="pdf_data">
-       <p class="text-center">
-            <img class="top-logo" id="my_logo" src="https://res.cloudinary.com/dmdaa1heq/image/upload/v1748271556/Konnectd_Logo_Reversed_el4sw9.png" alt="" srcset="">
+        <p class="text-center">
+            <img class="top-logo" id="my_logo" src="https://msgsndr-private.storage.googleapis.com/companyPhotos/2d9246fe-8a1e-4c40-87ef-576ce1f5ec7f.png" alt="" srcset="">
         </p>
       
         <div id="loan_sec">
@@ -1286,16 +1286,17 @@ jQuery(document).ready(function($){
             margin:       10,
             enableLinks:  true,
             filename:     'Loan_Calculator_'+date_time+".pdf",
-            image: { type: 'png', quality: 10 }, // Already set to maximum
-            html2canvas: {              
+         //   image:        { type: 'jpeg', quality: 1 },
+          //  html2canvas:  { scale: 2, logging: false },
+            image: { type: 'png', quality: 100 }, // Already set to maximum
+            html2canvas: { 
                  useCORS: true, // Ensure this is added
                  logging: false,                 
                 allowTaint: true, // If CORS fails
                 letterRendering: true, // Better text & image rendering
                 scale: 5, // ↑ Increase from 2 to 4 (max recommended) 
-          },
-           // html2canvas:  { scale: 2, logging: false },
-            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
         });
     }
 

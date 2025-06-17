@@ -117,6 +117,35 @@
           display: none;
         }
       }
+      .disclaimer {
+        margin-top: 2rem;
+        padding: 1.5rem;
+        background-color: #f8f9fa;
+        border-left: 4px solid #6c757d;
+        border-radius: 0 4px 4px 0;
+        font-size: 0.9rem;
+        line-height: 1.5;
+      }
+
+      .disclaimer h3 {
+        margin-top: 0;
+        margin-bottom: 0.75rem;
+        color: #495057;
+        font-size: 1.1rem;
+        font-weight: 600;
+      }
+
+      .disclaimer p {
+        margin: 0;
+        color: #6c757d;
+      }
+
+      @media (max-width: 768px) {
+        .disclaimer {
+          padding: 1rem;
+          font-size: 0.85rem;
+        }
+      }
     </style>
   </head>
   <body>
@@ -151,6 +180,16 @@
         <button type="submit">Calculate</button>
       </form>
       <div id="result" class="result"></div>
+      <div class="disclaimer">
+        <h3>Disclaimer</h3>
+        <p>
+          All calculations are estimates for informational use only and based on
+          data entered by the user. Results do not reflect guaranteed terms,
+          rates, or outcomes. Additional costs (e.g. PMI, FHA, VA, USDA fees)
+          may apply depending on loan structure. Provided by Konnectd as a
+          reference tool only.
+        </p>
+      </div>
     </div>
     <script>
       document

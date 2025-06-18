@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cost of Waiting Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;1,300;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f5f7fa;
+      }
+      .serif-italic {
+        font-family: "Merriweather", serif;
+        font-style: italic;
+        font-weight: 400;
+      }
+      .tooltip {
+        position: relative;
+        display: inline-block;
+        cursor: pointer;
+      }
+      .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 240px;
+        background-color: #333;
+        color: #fff;
+        text-align: left;
+        border-radius: 6px;
+        padding: 10px;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%;
+        left: 50%;
+        transform: translateX(-50%);
+        opacity: 0;
+        transition: opacity 0.3s;
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+      }
+      .tooltip:hover .tooltiptext {
+        visibility: visible;
+        opacity: 1;
+      }
+      input[type="number"] {
+        -moz-appearance: textfield;
+      }
+      input::-webkit-outer-spin-button,
+      input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+      .input-group {
+        position: relative;
+      }
+      .input-group .prefix {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #64748b;
+      }
+      .input-group .suffix {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #64748b;
+      }
+      .input-group input {
+        padding-left: 28px;
+      }
+      .input-group input.with-suffix {
+        padding-right: 28px;
+      }
+      .increase {
+        color: #ef4444;
+        text-align: right;
+        font-weight: 600;
+      }
+      .decrease {
+        color: #10b981;
+        text-align: right;
+        font-weight: 600;
+      }
+      .table-value {
+        text-align: right;
+        font-weight: 600;
+      }
+      .table-header {
+        text-transform: uppercase;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+      }
+      .yellow-underline {
+        position: relative;
+        display: inline-block;
+      }
+      .yellow-underline::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: -6px;
+        width: 330px;
+        height: 3px;
+        background-color: #fbbf24;
+        border-radius: 1px;
+      }
+
+      .yellow-underline2 {
+        position: relative;
+        display: inline-block;
+      }
+      .yellow-underline2::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 40px;
+        bottom: -6px;
+        width: 100px;
+        height: 3px;
+        background-color: #fbbf24;
+        border-radius: 1px;
+      }
+
+      .yellow-underline3 {
+        position: relative;
+        display: inline-block;
+      }
+      .yellow-underline3::after {
+        content: "";
+        position: absolute;
+        left: 200%;
+        transform: translateX(-50%);
+        top: 27px;
+        bottom: -6px;
+        width: 250px;
+        height: 3px;
+        background-color: #fbbf24;
+        border-radius: 1px;
+      }
+      .info-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 16px;
+        height: 16px;
+        border: 1px solid #64748b;
+        border-radius: 50%;
+        color: #64748b;
+        font-size: 10px;
+        font-style: italic;
+        margin-left: 4px;
+        cursor: pointer;
+      }
+      .loading-spinner {
+        display: inline-block;
+        width: 1em;
+        height: 1em;
+        border: 2px solid rgba(0, 0, 0, 0.1);
+        border-radius: 50%;
+        border-top-color: #3498db;
+        animation: spin 1s ease-in-out infinite;
+        margin-right: 0.5em;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .disclaimer {
+        margin-top: 2rem;
+        padding: 1.5rem;
+        background-color: #f8f9fa;
+        border-left: 4px solid #6c757d;
+        border-radius: 0 4px 4px 0;
+        font-size: 0.9rem;
+        line-height: 1.5;
+      }
+
+      .disclaimer h3 {
+        margin-top: 0;
+        margin-bottom: 0.75rem;
+        color: #495057;
+        font-size: 1.1rem;
+        font-weight: 600;
+      }
+
+      .disclaimer p {
+        margin: 0;
+        color: #6c757d;
+      }
+
+      @media (max-width: 768px) {
+        .disclaimer {
+          padding: 1rem;
+          font-size: 0.85rem;
+        }
+      }
+      .qr-promo-container {
+        margin: 10px 0 20px 0;
+        padding: 8px;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        border-radius: 8px;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        width: fit-content;
+        max-width: 200px;
+      }
+
+      .qr-promo-content {
+        text-align: center;
+        padding: 5px;
+      }
+
+      .qr-title {
+        font-size: 1rem;
+        color: #2c3e50;
+        margin: 5px 0;
+        font-weight: 600;
+      }
+
+      .qr-subtitle {
+        font-size: 0.8rem;
+        color: #7f8c8d;
+        margin-bottom: 8px;
+      }
+
+      .qr-image-container {
+        padding: 5px;
+        background: white;
+        border-radius: 5px;
+        display: inline-block;
+      }
+
+      .qr-image {
+        width: 100px;
+        height: 100px;
+        object-fit: contain;
+      }
+
+      /* Hide on mobile devices */
+      @media (max-width: 768px) {
+        .qr-promo-container {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+      <div class="qr-promo-container">
+        <div class="qr-promo-content">
+          <h2 class="qr-title">View on mobile</h2>
+          <!-- <p class="qr-subtitle">Scan the QR code below</p> -->
+          <div class="qr-image-container">
+            <img
+              src="https://res.cloudinary.com/dmdaa1heq/image/upload/v1750269899/Cost_of_Waiting_Calculator_bcfk1d.png"
+              alt="Scan QR Code"
+              class="qr-image"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-col lg:flex-row gap-8">
+        <!-- Left Side Panel: User Input -->
+        <div class="w-full lg:w-2/5">
+          <div class="bg-white rounded-xl shadow-lg p-6">
+            <h2 class="mb-6 text-gray-800">
+              <span
+                class="yellow-underline3 serif-italic font-light text-gray-500"
+                >Example</span
+              >
+              <span class="font-bold text-2xl">Home Purchase</span>
+            </h2>
+
+            <div class="space-y-5">
+              <div class="space-y-2">
+                <label
+                  for="purchasePrice"
+                  class="block text-sm font-medium text-gray-700"
+                  >Purchase Price</label
+                >
+                <div class="input-group">
+                  <span class="prefix">$</span>
+                  <input
+                    type="number"
+                    id="purchasePrice"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    value="500000"
+                  />
+                </div>
+              </div>
+
+              <div class="space-y-2">
+                <label
+                  for="downPayment"
+                  class="block text-sm font-medium text-gray-700"
+                  >Down Payment</label
+                >
+                <div class="input-group">
+                  <input
+                    type="number"
+                    id="downPayment"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 with-suffix"
+                    value="10"
+                  />
+                  <span class="suffix">%</span>
+                </div>
+              </div>
+
+              <div class="space-y-2">
+                <label
+                  for="interestRate"
+                  class="block text-sm font-medium text-gray-700"
+                >
+                  Interest Rate
+                  <span class="tooltip ml-1">
+                    <span class="info-icon">i</span>
+                    <span class="tooltiptext"
+                      >The current interest rate for a 30-year fixed mortgage.
+                      This affects your monthly payment amount.</span
+                    >
+                  </span>
+                </label>
+                <div class="input-group">
+                  <input
+                    type="number"
+                    id="interestRate"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 with-suffix"
+                    step="0.01"
+                    value="7.25"
+                  />
+                  <span class="suffix">%</span>
+                </div>
+              </div>
+
+              <div class="space-y-2">
+                <label
+                  for="averageFees"
+                  class="block text-sm font-medium text-gray-700"
+                >
+                  Average Fees
+                  <span class="tooltip ml-1">
+                    <span class="info-icon">i</span>
+                    <span class="tooltiptext"
+                      >Typical closing costs, origination fees, and other
+                      expenses associated with obtaining a mortgage.</span
+                    >
+                  </span>
+                </label>
+                <div class="input-group">
+                  <input
+                    type="number"
+                    id="averageFees"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 with-suffix"
+                    step="0.01"
+                    value="1.25"
+                  />
+                  <span class="suffix">%</span>
+                </div>
+              </div>
+
+              <div class="space-y-2">
+                <label
+                  for="homeAppreciation"
+                  class="block text-sm font-medium text-gray-700"
+                >
+                  Potential Home Appreciation
+                  <span class="tooltip ml-1">
+                    <span class="info-icon">i</span>
+                    <span class="tooltiptext"
+                      >Estimated annual increase in home value if you wait to
+                      purchase.</span
+                    >
+                  </span>
+                </label>
+                <div class="input-group">
+                  <input
+                    type="number"
+                    id="homeAppreciation"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 with-suffix"
+                    step="0.01"
+                    value="6"
+                  />
+                  <span class="suffix">%</span>
+                </div>
+              </div>
+
+              <div class="space-y-2">
+                <label
+                  for="rateChange"
+                  class="block text-sm font-medium text-gray-700"
+                >
+                  Potential Interest Rate Change
+                  <span class="tooltip ml-1">
+                    <span class="info-icon">i</span>
+                    <span class="tooltiptext"
+                      >Projected change in interest rates if you wait to
+                      purchase. Use negative values for decreases.</span
+                    >
+                  </span>
+                </label>
+                <div class="input-group">
+                  <input
+                    type="number"
+                    id="rateChange"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 with-suffix"
+                    step="0.01"
+                    value="-1.5"
+                  />
+                  <span class="suffix">%</span>
+                </div>
+              </div>
+
+              <button
+                id="updateButton"
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-md transition duration-200 mt-4"
+              >
+                UPDATE
+              </button>
+
+              <div class="flex justify-center mt-2">
+                <button
+                  id="savePDF"
+                  class="flex items-center text-blue-600 hover:text-blue-800"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 mr-1"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    />
+                  </svg>
+                  Save as PDF
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Side Panel: Results Display -->
+        <div class="w-full lg:w-3/5">
+          <!-- Main Headline -->
+          <div class="text-center mb-6">
+            <h1 class="serif-italic text-2xl text-gray-800 mb-2">
+              <span class="yellow-underline"
+                >Understand the Cost of Waiting</span
+              >
+            </h1>
+            <p class="text-sm text-gray-500 max-w-lg mx-auto">
+              Waiting could save you monthly but it will cost you thousands more
+              over the life of the loan.
+            </p>
+          </div>
+
+          <!-- Top Metrics -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div class="bg-white rounded-xl shadow-lg p-6 text-center">
+              <h3 class="serif-italic text-sm font-medium text-gray-500 mb-1">
+                <span class="yellow-underline2">Years to Recapture</span
+                ><br />Lost Equity
+              </h3>
+              <p id="yearsToRecapture" class="text-3xl font-bold text-gray-800">
+                10 Years
+              </p>
+            </div>
+            <div class="bg-white rounded-xl shadow-lg p-6 text-center">
+              <h3 class="serif-italic text-sm font-medium text-gray-500 mb-1">
+                <span class="yellow-underline2">Lost Equity and</span><br />Down
+                Payment
+              </h3>
+              <p id="lostEquity" class="text-3xl font-bold text-gray-800">
+                $33,000
+              </p>
+            </div>
+          </div>
+
+          <!-- Detailed Comparison Table -->
+          <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full">
+                <thead>
+                  <tr class="bg-gray-50">
+                    <th
+                      class="px-6 py-4 text-left text-sm text-gray-500 table-header"
+                    ></th>
+                    <th
+                      class="px-6 py-4 text-right text-sm text-gray-500 table-header"
+                    >
+                      Buy Now
+                    </th>
+                    <th
+                      class="px-6 py-4 text-right text-sm text-gray-500 table-header"
+                    >
+                      Buy Later
+                    </th>
+                    <th
+                      class="px-6 py-4 text-right text-sm text-gray-500 table-header"
+                    >
+                      Change
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                  <tr>
+                    <td class="px-6 py-4 text-sm font-medium text-gray-800">
+                      Purchase Price
+                    </td>
+                    <td
+                      id="buyNowPrice"
+                      class="px-6 py-4 text-sm text-gray-700 table-value"
+                    >
+                      $500,000
+                    </td>
+                    <td
+                      id="buyLaterPrice"
+                      class="px-6 py-4 text-sm text-gray-700 table-value"
+                    >
+                      $530,000
+                    </td>
+                    <td id="priceChange" class="px-6 py-4 text-sm increase">
+                      ↑ $30,000
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="px-6 py-4 text-sm font-medium text-gray-800">
+                      Down Payment
+                    </td>
+                    <td
+                      id="buyNowDown"
+                      class="px-6 py-4 text-sm text-gray-700 table-value"
+                    >
+                      $50,000
+                    </td>
+                    <td
+                      id="buyLaterDown"
+                      class="px-6 py-4 text-sm text-gray-700 table-value"
+                    >
+                      $53,000
+                    </td>
+                    <td id="downChange" class="px-6 py-4 text-sm increase">
+                      ↑ $3,000
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="px-6 py-4 text-sm font-medium text-gray-800">
+                      Loan Amount
+                    </td>
+                    <td
+                      id="buyNowLoan"
+                      class="px-6 py-4 text-sm text-gray-700 table-value"
+                    >
+                      $450,000
+                    </td>
+                    <td
+                      id="buyLaterLoan"
+                      class="px-6 py-4 text-sm text-gray-700 table-value"
+                    >
+                      $477,000
+                    </td>
+                    <td id="loanChange" class="px-6 py-4 text-sm increase">
+                      ↑ $27,000
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="px-6 py-4 text-sm font-medium text-gray-800">
+                      Loan Payment
+                      <span class="tooltip ml-1">
+                        <span class="info-icon">i</span>
+                        <span class="tooltiptext"
+                          >Monthly payment based on a 30-year fixed-rate
+                          mortgage.</span
+                        >
+                      </span>
+                    </td>
+                    <td
+                      id="buyNowPayment"
+                      class="px-6 py-4 text-sm text-gray-700 table-value"
+                    >
+                      $3,070
+                    </td>
+                    <td
+                      id="buyLaterPayment"
+                      class="px-6 py-4 text-sm text-gray-700 table-value"
+                    >
+                      $2,784
+                    </td>
+                    <td id="paymentChange" class="px-6 py-4 text-sm decrease">
+                      ↓ $-286
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="px-6 py-4 text-sm font-medium text-gray-800">
+                      Average Fees
+                      <span class="tooltip ml-1">
+                        <span class="info-icon">i</span>
+                        <span class="tooltiptext"
+                          >Typical closing costs, origination fees, and other
+                          expenses associated with obtaining a mortgage.</span
+                        >
+                      </span>
+                    </td>
+                    <td
+                      id="buyNowFees"
+                      class="px-6 py-4 text-sm text-gray-700 table-value"
+                    >
+                      $5,625
+                    </td>
+                    <td
+                      id="buyLaterFees"
+                      class="px-6 py-4 text-sm text-gray-700 table-value"
+                    >
+                      $5,963
+                    </td>
+                    <td id="feesChange" class="px-6 py-4 text-sm increase">
+                      ↑ $338
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="px-6 py-4 text-sm font-medium text-gray-800">
+                      Interest Rate
+                      <span class="tooltip ml-1">
+                        <span class="info-icon">i</span>
+                        <span class="tooltiptext"
+                          >The interest rate for a 30-year fixed mortgage.</span
+                        >
+                      </span>
+                    </td>
+                    <td
+                      id="buyNowRate"
+                      class="px-6 py-4 text-sm text-gray-700 table-value"
+                    >
+                      7.25%
+                    </td>
+                    <td
+                      id="buyLaterRate"
+                      class="px-6 py-4 text-sm text-gray-700 table-value"
+                    >
+                      5.75%
+                    </td>
+                    <td
+                      id="rateChangeDisplay"
+                      class="px-6 py-4 text-sm decrease"
+                    >
+                      ↓ -1.5%
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="px-6 py-4 text-sm font-medium text-gray-800">
+                      Estimated APR
+                    </td>
+                    <td
+                      id="buyNowAPR"
+                      class="px-6 py-4 text-sm text-gray-700 table-value"
+                    >
+                      7.454%
+                    </td>
+                    <td
+                      id="buyLaterAPR"
+                      class="px-6 py-4 text-sm text-gray-700 table-value"
+                    >
+                      6.332%
+                    </td>
+                    <td id="aprChange" class="px-6 py-4 text-sm decrease">
+                      ↓ -1.122%
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div
+              class="px-6 py-6 text-xs text-gray-400 italic text-center mt-2"
+            >
+              Values are for illustration purposes only.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="disclaimer">
+        <h3>Disclaimer</h3>
+        <p>
+          All calculations are estimates for informational use only and based on
+          data entered by the user. Results do not reflect guaranteed terms,
+          rates, or outcomes. Additional costs (e.g. PMI, FHA, VA, USDA fees)
+          may apply depending on loan structure. Provided by Konnectd as a
+          reference tool only.
+        </p>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Initial calculation
+        calculateResults();
+
+        // Add event listener to update button
+        document
+          .getElementById("updateButton")
+          .addEventListener("click", calculateResults);
+
+        // Add event listener to save PDF button
+        /*   document
+          .getElementById("savePDF")
+          .addEventListener("click", function () {
+            alert("PDF export functionality would be implemented here.");
+            // In a real implementation, this would generate a PDF of the calculator results
+          });
+      */
+
+        document
+          .getElementById("savePDF")
+          .addEventListener("click", function () {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({
+              orientation: "portrait",
+              unit: "mm",
+              format: "a4",
+            });
+
+            // Set default font
+            doc.setFont("helvetica");
+            doc.setTextColor(31, 41, 55); // text-gray-800
+
+            // Get all dynamic values from the page
+            const getCleanValue = (elementId) => {
+              const el = document.getElementById(elementId);
+              if (!el) return "";
+              // Remove arrow indicators and extra spaces from values
+              return el.textContent
+                .replace(/↑|↓/g, "") // Remove arrows
+                .replace(/\s+/g, "") // Remove all whitespace
+                .trim();
+            };
+
+            const getChangeValue = (elementId) => {
+              const el = document.getElementById(elementId);
+              if (!el) return { value: "", isIncrease: false, arrow: "" };
+
+              // Determine if it's an increase or decrease by class
+              const isIncrease = el.classList.contains("increase");
+              const isDecrease = el.classList.contains("decrease");
+
+              // Use Unicode arrow characters
+              const arrow = isIncrease ? "↑" : isDecrease ? "↓" : "";
+
+              // Get the text and clean it
+              let text = el.textContent;
+
+              // Remove arrow characters and extra spaces
+              const cleanValue = text
+                .replace(/↑|↓/g, "") // Remove any existing arrow characters
+                .replace(/\s+/g, " ") // Replace multiple spaces with one space
+                .trim();
+
+              return {
+                value: cleanValue,
+                isIncrease: isIncrease,
+                arrow: arrow,
+              };
+            };
+            // Get all values
+            const yearsToRecapture = getCleanValue("yearsToRecapture");
+            const lostEquity = getCleanValue("lostEquity");
+
+            // Table values
+            const buyNowPrice = getCleanValue("buyNowPrice");
+            const buyLaterPrice = getCleanValue("buyLaterPrice");
+            const priceChange = getChangeValue("priceChange");
+
+            const buyNowDown = getCleanValue("buyNowDown");
+            const buyLaterDown = getCleanValue("buyLaterDown");
+            const downChange = getChangeValue("downChange");
+
+            const buyNowLoan = getCleanValue("buyNowLoan");
+            const buyLaterLoan = getCleanValue("buyLaterLoan");
+            const loanChange = getChangeValue("loanChange");
+
+            const buyNowPayment = getCleanValue("buyNowPayment");
+            const buyLaterPayment = getCleanValue("buyLaterPayment");
+            const paymentChange = getChangeValue("paymentChange");
+
+            const buyNowFees = getCleanValue("buyNowFees");
+            const buyLaterFees = getCleanValue("buyLaterFees");
+            const feesChange = getChangeValue("feesChange");
+
+            const buyNowRate = getCleanValue("buyNowRate");
+            const buyLaterRate = getCleanValue("buyLaterRate");
+            const rateChangeDisplay = getChangeValue("rateChangeDisplay");
+
+            const buyNowAPR = getCleanValue("buyNowAPR");
+            const buyLaterAPR = getCleanValue("buyLaterAPR");
+            const aprChange = getChangeValue("aprChange");
+
+            // Add logo (centered and higher up)
+            const logoData =
+              "https://storage.googleapis.com/msgsndr/hpYWXdHJSatXsaZrFlau/media/684992014c655e438a0f469e.png"; // Replace with your actual logo
+            const logoWidth = 40;
+            const logoHeight = 15;
+            const logoX = (210 - logoWidth) / 2; // Center horizontally
+            doc.addImage(logoData, "PNG", logoX, 10, logoWidth, logoHeight);
+
+            // Title section (positioned below logo)
+            doc.setFontSize(22);
+            doc.setFont("helvetica", "bolditalic");
+            doc.text("Understand the Cost of Waiting", 105, 35, {
+              align: "center",
+            });
+
+            doc.setFontSize(12);
+            doc.setFont("helvetica", "normal");
+            doc.setTextColor(107, 114, 128); // text-gray-500
+            doc.text(
+              "Waiting could save you monthly but it will cost you thousands more over the life of the loan.",
+              105,
+              41,
+              { align: "center", maxWidth: 160 }
+            );
+
+            // Metrics section
+            doc.setFontSize(14);
+            doc.setFont("helvetica", "bolditalic");
+            doc.setTextColor(75, 85, 99); // text-gray-600
+
+            // First metric box
+            doc.setFillColor(255, 255, 255); // bg-white
+            doc.roundedRect(25, 50, 75, 30, 3, 3, "F");
+            doc.text("Years to Recapture", 62.5, 57, { align: "center" });
+            doc.text("Lost Equity", 62.5, 64, { align: "center" });
+            doc.setFontSize(24);
+            doc.setFont("helvetica", "bold");
+            doc.setTextColor(31, 41, 55); // text-gray-800
+            doc.text(yearsToRecapture, 62.5, 75, { align: "center" });
+
+            // Second metric box
+            doc.setFillColor(255, 255, 255); // bg-white
+            doc.roundedRect(110, 50, 75, 30, 3, 3, "F");
+            doc.setFontSize(14);
+            doc.setFont("helvetica", "bolditalic");
+            doc.setTextColor(75, 85, 99); // text-gray-600
+            doc.text("Lost Equity and", 147.5, 57, { align: "center" });
+            doc.text("Down Payment", 147.5, 64, { align: "center" });
+            doc.setFontSize(24);
+            doc.setFont("helvetica", "bold");
+            doc.setTextColor(31, 41, 55); // text-gray-800
+            doc.text(lostEquity, 147.5, 75, { align: "center" });
+
+            // Comparison table
+            doc.setFontSize(16);
+            doc.setFont("helvetica", "bolditalic");
+            doc.text("Detailed Comparison", 105, 90, { align: "center" });
+
+            // Table header
+            doc.setFillColor(249, 250, 251); // bg-gray-50
+            doc.rect(20, 95, 170, 10, "F");
+            doc.setFontSize(12);
+            doc.setFont("helvetica", "bold");
+            doc.setTextColor(75, 85, 99); // text-gray-600
+            doc.text("", 30, 102);
+            doc.text("Buy Now", 85, 102, { align: "right" });
+            doc.text("Buy Later", 140, 102, { align: "right" });
+            doc.text("Change", 185, 102, { align: "right" });
+
+            // Complete table rows data with proper arrow handling
+            const tableData = [
+              {
+                label: "Purchase Price",
+                now: buyNowPrice,
+                later: buyLaterPrice,
+                change: priceChange,
+              },
+              {
+                label: "Down Payment",
+                now: buyNowDown,
+                later: buyLaterDown,
+                change: downChange,
+              },
+              {
+                label: "Loan Amount",
+                now: buyNowLoan,
+                later: buyLaterLoan,
+                change: loanChange,
+              },
+              {
+                label: "Loan Payment",
+                now: buyNowPayment,
+                later: buyLaterPayment,
+                change: paymentChange,
+              },
+              {
+                label: "Average Fees",
+                now: buyNowFees,
+                later: buyLaterFees,
+                change: feesChange,
+              },
+              {
+                label: "Interest Rate",
+                now: buyNowRate,
+                later: buyLaterRate,
+                change: rateChangeDisplay,
+              },
+              {
+                label: "Estimated APR",
+                now: buyNowAPR,
+                later: buyLaterAPR,
+                change: aprChange,
+              },
+            ];
+
+            let yPos = 110;
+            tableData.forEach((row) => {
+              // Add subtle row background alternation
+              if (tableData.indexOf(row) % 2 === 0) {
+                doc.setFillColor(255, 255, 255); // white
+              } else {
+                doc.setFillColor(249, 250, 251); // gray-50
+              }
+              doc.rect(20, yPos - 5, 170, 8, "F");
+
+              doc.setFontSize(12);
+              doc.setFont("helvetica", "normal");
+              doc.setTextColor(31, 41, 55); // text-gray-800
+
+              // Label
+              doc.text(row.label, 30, yPos);
+
+              // Buy Now value
+              doc.text(row.now, 85, yPos, { align: "right" });
+
+              // Buy Later value
+              doc.text(row.later, 140, yPos, { align: "right" });
+
+              // Change value with proper arrow and color coding
+              if (row.change.isIncrease) {
+                doc.setTextColor(220, 38, 38); // text-red-600
+                doc.text(`${row.change.arrow} ${row.change.value}`, 185, yPos, {
+                  align: "right",
+                });
+              } else {
+                doc.setTextColor(5, 150, 105); // text-emerald-600
+                doc.text(`${row.change.arrow} ${row.change.value}`, 185, yPos, {
+                  align: "right",
+                });
+              }
+
+              yPos += 8;
+            });
+
+            // Footer
+            doc.setFontSize(10);
+            doc.setTextColor(156, 163, 175); // text-gray-400
+            doc.text(
+              "Values are for illustration purposes only.",
+              105,
+              yPos + 10,
+              { align: "center" }
+            );
+
+            // Disclaimer
+            doc.setFontSize(8);
+            const disclaimer =
+              "Note: This calculator is made available to you as an educational tool only and calculations are based on borrower-input information. This is not an advertisement for the above terms, interest rates, or payment amounts. Envoy Mortgage does not guarantee the applicability of the above terms in regards to your individual circumstances.";
+            doc.text(disclaimer, 105, yPos + 15, {
+              maxWidth: 170,
+              align: "center",
+            });
+
+            // Generation date
+            const today = new Date().toLocaleDateString();
+            doc.text(`Generated: ${today}`, 190, 290, { align: "right" });
+
+            // Save the PDF
+            doc.save("Mortgage_Cost_of_Waiting_Report.pdf");
+          });
+
+        function calculateResults() {
+          // Get input values
+          const purchasePrice = parseFloat(
+            document.getElementById("purchasePrice").value
+          );
+          const downPaymentPercent =
+            parseFloat(document.getElementById("downPayment").value) / 100;
+          const interestRate =
+            parseFloat(document.getElementById("interestRate").value) / 100;
+          const averageFees =
+            parseFloat(document.getElementById("averageFees").value) / 100;
+          const homeAppreciation =
+            parseFloat(document.getElementById("homeAppreciation").value) / 100;
+          const rateChange =
+            parseFloat(document.getElementById("rateChange").value) / 100;
+
+          // Calculate Buy Now values
+          const buyNowDownPayment = purchasePrice * downPaymentPercent;
+          const buyNowLoanAmount = purchasePrice - buyNowDownPayment;
+          const buyNowFees = buyNowLoanAmount * averageFees;
+          const buyNowMonthlyRate = interestRate / 12;
+          const buyNowLoanTermMonths = 30 * 12;
+          const buyNowMonthlyPayment = calculateMonthlyPayment(
+            buyNowLoanAmount,
+            buyNowMonthlyRate,
+            buyNowLoanTermMonths
+          );
+          const buyNowAPR = interestRate + averageFees * 0.8; // Simplified APR calculation
+
+          // Calculate Buy Later values
+          const buyLaterPrice = purchasePrice * (1 + homeAppreciation);
+          const buyLaterDownPayment = buyLaterPrice * downPaymentPercent;
+          const buyLaterLoanAmount = buyLaterPrice - buyLaterDownPayment;
+          const buyLaterInterestRate = interestRate + rateChange;
+          const buyLaterFees = buyLaterLoanAmount * averageFees;
+          const buyLaterMonthlyRate = buyLaterInterestRate / 12;
+          const buyLaterLoanTermMonths = 30 * 12;
+          const buyLaterMonthlyPayment = calculateMonthlyPayment(
+            buyLaterLoanAmount,
+            buyLaterMonthlyRate,
+            buyLaterLoanTermMonths
+          );
+          const buyLaterAPR = buyLaterInterestRate + averageFees * 0.8; // Simplified APR calculation
+
+          // Calculate changes
+          const priceChange = buyLaterPrice - purchasePrice;
+          const downPaymentChange = buyLaterDownPayment - buyNowDownPayment;
+          const loanAmountChange = buyLaterLoanAmount - buyNowLoanAmount;
+          const monthlyPaymentChange =
+            buyLaterMonthlyPayment - buyNowMonthlyPayment;
+          const feesChange = buyLaterFees - buyNowFees;
+          const aprChange = buyLaterAPR - buyNowAPR;
+
+          // Calculate lost equity
+          const lostEquityValue = downPaymentChange + feesChange;
+
+          // Calculate years to recapture
+          // Simplified calculation: lost equity divided by monthly payment savings (if any)
+          let yearsToRecapture = 10; // Default value
+          if (monthlyPaymentChange < 0) {
+            // If there are monthly savings
+            yearsToRecapture = Math.abs(
+              Math.round(
+                lostEquityValue / (Math.abs(monthlyPaymentChange) * 12)
+              )
+            );
+          }
+
+          // Update the display with singular/plural year handling
+          const yearText = yearsToRecapture === 1 ? "Year" : "Years";
+          document.getElementById(
+            "yearsToRecapture"
+          ).textContent = `${yearsToRecapture} ${yearText}`;
+          document.getElementById("lostEquity").textContent =
+            formatCurrency(lostEquityValue);
+
+          // Update table values
+          document.getElementById("buyNowPrice").textContent =
+            formatCurrency(purchasePrice);
+          document.getElementById("buyLaterPrice").textContent =
+            formatCurrency(buyLaterPrice);
+          document.getElementById("priceChange").textContent =
+            formatChange(priceChange);
+          document.getElementById("priceChange").className =
+            priceChange > 0
+              ? "px-6 py-4 text-sm increase"
+              : "px-6 py-4 text-sm decrease";
+
+          document.getElementById("buyNowDown").textContent =
+            formatCurrency(buyNowDownPayment);
+          document.getElementById("buyLaterDown").textContent =
+            formatCurrency(buyLaterDownPayment);
+          document.getElementById("downChange").textContent =
+            formatChange(downPaymentChange);
+          document.getElementById("downChange").className =
+            downPaymentChange > 0
+              ? "px-6 py-4 text-sm increase"
+              : "px-6 py-4 text-sm decrease";
+
+          document.getElementById("buyNowLoan").textContent =
+            formatCurrency(buyNowLoanAmount);
+          document.getElementById("buyLaterLoan").textContent =
+            formatCurrency(buyLaterLoanAmount);
+          document.getElementById("loanChange").textContent =
+            formatChange(loanAmountChange);
+          document.getElementById("loanChange").className =
+            loanAmountChange > 0
+              ? "px-6 py-4 text-sm increase"
+              : "px-6 py-4 text-sm decrease";
+
+          document.getElementById("buyNowPayment").textContent =
+            formatCurrency(buyNowMonthlyPayment);
+          document.getElementById("buyLaterPayment").textContent =
+            formatCurrency(buyLaterMonthlyPayment);
+          document.getElementById("paymentChange").textContent =
+            formatChange(monthlyPaymentChange);
+          document.getElementById("paymentChange").className =
+            monthlyPaymentChange > 0
+              ? "px-6 py-4 text-sm increase"
+              : "px-6 py-4 text-sm decrease";
+
+          document.getElementById("buyNowFees").textContent =
+            formatCurrency(buyNowFees);
+          document.getElementById("buyLaterFees").textContent =
+            formatCurrency(buyLaterFees);
+          document.getElementById("feesChange").textContent =
+            formatChange(feesChange);
+          document.getElementById("feesChange").className =
+            feesChange > 0
+              ? "px-6 py-4 text-sm increase"
+              : "px-6 py-4 text-sm decrease";
+
+          document.getElementById("buyNowRate").textContent =
+            formatPercent(interestRate);
+          document.getElementById("buyLaterRate").textContent =
+            formatPercent(buyLaterInterestRate);
+          document.getElementById("rateChangeDisplay").textContent =
+            formatPercentChange(rateChange);
+          document.getElementById("rateChangeDisplay").className =
+            rateChange > 0
+              ? "px-6 py-4 text-sm increase"
+              : "px-6 py-4 text-sm decrease";
+
+          document.getElementById("buyNowAPR").textContent =
+            formatPercent(buyNowAPR);
+          document.getElementById("buyLaterAPR").textContent =
+            formatPercent(buyLaterAPR);
+          document.getElementById("aprChange").textContent =
+            formatPercentChange(aprChange);
+          document.getElementById("aprChange").className =
+            aprChange > 0
+              ? "px-6 py-4 text-sm increase"
+              : "px-6 py-4 text-sm decrease";
+        }
+
+        function calculateMonthlyPayment(loanAmount, monthlyRate, termMonths) {
+          if (monthlyRate === 0) return loanAmount / termMonths;
+          return (
+            (loanAmount *
+              (monthlyRate * Math.pow(1 + monthlyRate, termMonths))) /
+            (Math.pow(1 + monthlyRate, termMonths) - 1)
+          );
+        }
+
+        function formatCurrency(value) {
+          return new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: "USD",
+            maximumFractionDigits: 0,
+          }).format(value);
+        }
+
+        function formatPercent(value) {
+          return new Intl.NumberFormat("en-US", {
+            style: "percent",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 3,
+          }).format(value);
+        }
+
+        function formatChange(value) {
+          const prefix = value > 0 ? "↑ " : "↓ ";
+          return (
+            prefix +
+            new Intl.NumberFormat("en-US", {
+              style: "currency",
+              currency: "USD",
+              maximumFractionDigits: 0,
+            }).format(value)
+          );
+        }
+
+        function formatPercentChange(value) {
+          const prefix = value > 0 ? "↑ " : "↓ ";
+          return (
+            prefix +
+            new Intl.NumberFormat("en-US", {
+              style: "percent",
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 3,
+            }).format(value)
+          );
+        }
+      });
+    </script>
+  </body>
+</html>

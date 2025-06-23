@@ -253,6 +253,84 @@
           display: none;
         }
       }
+
+      /*    ====================*/
+
+      /* ===== Tooltip System - Updated Class Names ===== */
+      .tooltip-container {
+        position: relative;
+        display: inline-block;
+        cursor: pointer;
+      }
+
+      .tooltip-content {
+        visibility: hidden;
+        width: 240px;
+        background-color: #333;
+        color: #fff;
+        text-align: left;
+        border-radius: 6px;
+        padding: 10px;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%;
+        left: 90%;
+        transform: translateX(-90%);
+        opacity: 0;
+        transition: opacity 0.3s;
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+      }
+
+      .tooltip-container:hover .tooltip-content {
+        visibility: visible;
+        opacity: 1;
+      }
+
+      .tooltip-indicator {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 16px;
+        height: 16px;
+        border: 1px solid #64748b;
+        border-radius: 50%;
+        color: #64748b;
+        font-size: 10px;
+        font-style: italic;
+        margin-left: 4px;
+        cursor: pointer;
+      }
+
+      /* Mobile Responsive Adjustments */
+      @media (max-width: 768px) {
+        .tooltip-content {
+          width: 180px;
+          font-size: 0.75rem;
+          line-height: 1.2;
+          padding: 8px;
+        }
+
+        .tooltip-right .tooltip-content {
+          left: 0;
+          right: 0;
+          transform: none;
+        }
+
+        .tooltip-left .tooltip-content {
+          left: 0;
+          right: auto;
+          transform: none;
+        }
+      }
+
+      /* Touch Device Support */
+      @media (hover: none) {
+        .tooltip-active .tooltip-content {
+          visibility: visible;
+          opacity: 1;
+        }
+      }
     </style>
   </head>
   <body>
@@ -581,12 +659,12 @@
                   <tr>
                     <td class="px-6 py-4 text-sm font-medium text-gray-800">
                       Loan Payment
-                      <span class="tooltip ml-1">
-                        <span class="info-icon">i</span>
-                        <span class="tooltiptext"
-                          >Monthly payment based on a 30-year fixed-rate
-                          mortgage.</span
-                        >
+                      <span class="tooltip-container tooltip-right ml-1">
+                        <span class="tooltip-indicator">i</span>
+                        <span class="tooltip-content">
+                          Monthly payment based on a 30-year fixed-rate
+                          mortgage.
+                        </span>
                       </span>
                     </td>
                     <td
@@ -608,9 +686,9 @@
                   <tr>
                     <td class="px-6 py-4 text-sm font-medium text-gray-800">
                       Average Fees
-                      <span class="tooltip ml-1">
-                        <span class="info-icon">i</span>
-                        <span class="tooltiptext"
+                      <span class="tooltip-container tooltip-right ml-1">
+                        <span class="tooltip-indicator">i</span>
+                        <span class="tooltip-content"
                           >Typical closing costs, origination fees, and other
                           expenses associated with obtaining a mortgage.</span
                         >
@@ -635,9 +713,9 @@
                   <tr>
                     <td class="px-6 py-4 text-sm font-medium text-gray-800">
                       Interest Rate
-                      <span class="tooltip ml-1">
-                        <span class="info-icon">i</span>
-                        <span class="tooltiptext"
+                      <span class="tooltip-container tooltip-right ml-1">
+                        <span class="tooltip-indicator">i</span>
+                        <span class="tooltip-content"
                           >The interest rate for a 30-year fixed mortgage.</span
                         >
                       </span>

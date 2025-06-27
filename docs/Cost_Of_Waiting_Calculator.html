@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;1,300;1,400&display=swap"
       rel="stylesheet"
@@ -773,11 +774,11 @@
       <div class="disclaimer">
         <h3>Disclaimer</h3>
         <p>
-          All calculations are estimates for informational use only and based on
-          data entered by the user. Results do not reflect guaranteed terms,
-          rates, or outcomes. Additional costs (e.g. PMI, FHA, VA, USDA fees)
-          may apply depending on loan structure. Provided by Konnectd as a
-          reference tool only.
+          This calculator is intended for educational purposes only. All figures
+          are estimates based on borrower-provided inputs and do not represent a
+          formal loan offer. Actual results may vary. For personalized
+          information based on your situation, please speak directly with your
+          loan advisor.
         </p>
       </div>
     </div>
@@ -815,93 +816,97 @@
             doc.setFont("helvetica");
             doc.setTextColor(31, 41, 55); // text-gray-800
 
-            // Get all dynamic values from the page
+            // Function to get change value with type
+            const getChangeValue = (elementId) => {
+              const el = document.getElementById(elementId);
+              if (!el) return { value: "", type: "neutral" };
+
+              // Extract numeric value
+              const numericValue = parseFloat(
+                el.textContent.replace(/[^\d.-]/g, "")
+              );
+
+              // Determine type from class
+              const type = el.classList.contains("increase")
+                ? "increase"
+                : el.classList.contains("decrease")
+                ? "decrease"
+                : "neutral";
+
+              return { value: numericValue, type };
+            };
+
+            // Function to get regular value
             const getCleanValue = (elementId) => {
               const el = document.getElementById(elementId);
               if (!el) return "";
-              // Remove arrow indicators and extra spaces from values
-              return el.textContent
-                .replace(/↑|↓/g, "") // Remove arrows
-                .replace(/\s+/g, "") // Remove all whitespace
-                .trim();
+              return el.textContent.replace(/\s+/g, "").trim();
             };
 
-            const getChangeValue = (elementId) => {
-              const el = document.getElementById(elementId);
-              if (!el) return { value: "", isIncrease: false, arrow: "" };
-
-              // Determine if it's an increase or decrease by class
-              const isIncrease = el.classList.contains("increase");
-              const isDecrease = el.classList.contains("decrease");
-
-              // Use Unicode arrow characters
-              const arrow = isIncrease ? "↑" : isDecrease ? "↓" : "";
-
-              // Get the text and clean it
-              let text = el.textContent;
-
-              // Remove arrow characters and extra spaces
-              const cleanValue = text
-                .replace(/↑|↓/g, "") // Remove any existing arrow characters
-                .replace(/\s+/g, " ") // Replace multiple spaces with one space
-                .trim();
-
-              return {
-                value: cleanValue,
-                isIncrease: isIncrease,
-                arrow: arrow,
-              };
-            };
             // Get all values
             const yearsToRecapture = getCleanValue("yearsToRecapture");
             const lostEquity = getCleanValue("lostEquity");
 
             // Table values
-            const buyNowPrice = getCleanValue("buyNowPrice");
-            const buyLaterPrice = getCleanValue("buyLaterPrice");
-            const priceChange = getChangeValue("priceChange");
+            const tableData = [
+              {
+                label: "Purchase Price",
+                now: getCleanValue("buyNowPrice"),
+                later: getCleanValue("buyLaterPrice"),
+                change: getChangeValue("priceChange"),
+                isCurrency: true,
+              },
+              {
+                label: "Down Payment",
+                now: getCleanValue("buyNowDown"),
+                later: getCleanValue("buyLaterDown"),
+                change: getChangeValue("downChange"),
+                isCurrency: true,
+              },
+              {
+                label: "Loan Amount",
+                now: getCleanValue("buyNowLoan"),
+                later: getCleanValue("buyLaterLoan"),
+                change: getChangeValue("loanChange"),
+                isCurrency: true,
+              },
+              {
+                label: "Loan Payment",
+                now: getCleanValue("buyNowPayment"),
+                later: getCleanValue("buyLaterPayment"),
+                change: getChangeValue("paymentChange"),
+                isCurrency: true,
+              },
+              {
+                label: "Average Fees",
+                now: getCleanValue("buyNowFees"),
+                later: getCleanValue("buyLaterFees"),
+                change: getChangeValue("feesChange"),
+                isCurrency: true,
+              },
+              {
+                label: "Interest Rate",
+                now: getCleanValue("buyNowRate"),
+                later: getCleanValue("buyLaterRate"),
+                change: getChangeValue("rateChangeDisplay"),
+                isCurrency: false,
+              },
+              {
+                label: "Estimated APR",
+                now: getCleanValue("buyNowAPR"),
+                later: getCleanValue("buyLaterAPR"),
+                change: getChangeValue("aprChange"),
+                isCurrency: false,
+              },
+            ];
 
-            const buyNowDown = getCleanValue("buyNowDown");
-            const buyLaterDown = getCleanValue("buyLaterDown");
-            const downChange = getChangeValue("downChange");
-
-            const buyNowLoan = getCleanValue("buyNowLoan");
-            const buyLaterLoan = getCleanValue("buyLaterLoan");
-            const loanChange = getChangeValue("loanChange");
-
-            const buyNowPayment = getCleanValue("buyNowPayment");
-            const buyLaterPayment = getCleanValue("buyLaterPayment");
-            const paymentChange = getChangeValue("paymentChange");
-
-            const buyNowFees = getCleanValue("buyNowFees");
-            const buyLaterFees = getCleanValue("buyLaterFees");
-            const feesChange = getChangeValue("feesChange");
-
-            const buyNowRate = getCleanValue("buyNowRate");
-            const buyLaterRate = getCleanValue("buyLaterRate");
-            const rateChangeDisplay = getChangeValue("rateChangeDisplay");
-
-            const buyNowAPR = getCleanValue("buyNowAPR");
-            const buyLaterAPR = getCleanValue("buyLaterAPR");
-            const aprChange = getChangeValue("aprChange");
-
-            // Add logo (centered and higher up)
-            const logoData =
-              "https://storage.googleapis.com/msgsndr/hpYWXdHJSatXsaZrFlau/media/684992014c655e438a0f469e.png"; // Replace with your actual logo
-            const logoWidth = 40;
-            const logoHeight = 15;
-            const logoX = (210 - logoWidth) / 2; // Center horizontally
-            doc.addImage(logoData, "PNG", logoX, 10, logoWidth, logoHeight);
-
-            // Title section (positioned below logo)
+            // Title section
             doc.setFontSize(22);
-            doc.setFont("helvetica", "bolditalic");
             doc.text("Understand the Cost of Waiting", 105, 35, {
               align: "center",
             });
 
             doc.setFontSize(12);
-            doc.setFont("helvetica", "normal");
             doc.setTextColor(107, 114, 128); // text-gray-500
             doc.text(
               "Waiting could save you monthly but it will cost you thousands more over the life of the loan.",
@@ -938,105 +943,66 @@
             doc.setTextColor(31, 41, 55); // text-gray-800
             doc.text(lostEquity, 147.5, 75, { align: "center" });
 
-            // Comparison table
-            doc.setFontSize(16);
-            doc.setFont("helvetica", "bolditalic");
-            doc.text("Detailed Comparison", 105, 90, { align: "center" });
-
             // Table header
-            doc.setFillColor(249, 250, 251); // bg-gray-50
+            doc.setFillColor(249, 250, 251); // Light gray background
             doc.rect(20, 95, 170, 10, "F");
             doc.setFontSize(12);
-            doc.setFont("helvetica", "bold");
             doc.setTextColor(75, 85, 99); // text-gray-600
-            doc.text("", 30, 102);
+            doc.text("", 30, 102); // Empty first column
             doc.text("Buy Now", 85, 102, { align: "right" });
             doc.text("Buy Later", 140, 102, { align: "right" });
             doc.text("Change", 185, 102, { align: "right" });
 
-            // Complete table rows data with proper arrow handling
-            const tableData = [
-              {
-                label: "Purchase Price",
-                now: buyNowPrice,
-                later: buyLaterPrice,
-                change: priceChange,
-              },
-              {
-                label: "Down Payment",
-                now: buyNowDown,
-                later: buyLaterDown,
-                change: downChange,
-              },
-              {
-                label: "Loan Amount",
-                now: buyNowLoan,
-                later: buyLaterLoan,
-                change: loanChange,
-              },
-              {
-                label: "Loan Payment",
-                now: buyNowPayment,
-                later: buyLaterPayment,
-                change: paymentChange,
-              },
-              {
-                label: "Average Fees",
-                now: buyNowFees,
-                later: buyLaterFees,
-                change: feesChange,
-              },
-              {
-                label: "Interest Rate",
-                now: buyNowRate,
-                later: buyLaterRate,
-                change: rateChangeDisplay,
-              },
-              {
-                label: "Estimated APR",
-                now: buyNowAPR,
-                later: buyLaterAPR,
-                change: aprChange,
-              },
-            ];
+            // SVG icons as paths
+            const upArrowSVG = "M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z";
+            const downArrowSVG = "M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z";
 
+            // Table rows
             let yPos = 110;
             tableData.forEach((row) => {
-              // Add subtle row background alternation
-              if (tableData.indexOf(row) % 2 === 0) {
-                doc.setFillColor(255, 255, 255); // white
-              } else {
-                doc.setFillColor(249, 250, 251); // gray-50
-              }
+              // Alternate row colors
+              doc.setFillColor(tableData.indexOf(row) % 2 === 0 ? 255 : 249); // White/Gray
               doc.rect(20, yPos - 5, 170, 8, "F");
 
-              doc.setFontSize(12);
-              doc.setFont("helvetica", "normal");
-              doc.setTextColor(31, 41, 55); // text-gray-800
-
-              // Label
+              // Label (left-aligned)
+              doc.setTextColor(31, 41, 55); // Dark gray
               doc.text(row.label, 30, yPos);
 
-              // Buy Now value
+              // Values (right-aligned)
               doc.text(row.now, 85, yPos, { align: "right" });
-
-              // Buy Later value
               doc.text(row.later, 140, yPos, { align: "right" });
 
-              // Change value with proper arrow and color coding
-              if (row.change.isIncrease) {
-                doc.setTextColor(220, 38, 38); // text-red-600
-                doc.text(`${row.change.arrow} ${row.change.value}`, 185, yPos, {
-                  align: "right",
-                });
+              // Change value with icon and color
+              const changeValue = formatChangeValue(
+                row.change.value,
+                row.isCurrency
+              );
+              const iconX = 180; // Position for icon
+              const textX = 185; // Position for text
+
+              if (row.change.type === "increase") {
+                // Draw red up arrow
+                doc.setDrawColor(220, 38, 38);
+                doc.setFillColor(220, 38, 38);
+                doc.path(upArrowSVG, "S", iconX, yPos - 2, 2, 2);
+
+                // Add value text
+                doc.setTextColor(220, 38, 38);
+                doc.text(changeValue, textX, yPos, { align: "right" });
+              } else if (row.change.type === "decrease") {
+                // Draw green down arrow
+                doc.setDrawColor(5, 150, 105);
+                doc.setFillColor(5, 150, 105);
+                doc.path("&darr;", "S", iconX, yPos - 2, 2, 2);
+
+                // Add value text
+                doc.setTextColor(5, 150, 105);
+                doc.text(changeValue, textX, yPos, { align: "right" });
               } else {
-                doc.setTextColor(5, 150, 105); // text-emerald-600
-                doc.text(`${row.change.arrow} ${row.change.value}`, 185, yPos, {
-                  align: "right",
-                });
+                doc.text(changeValue, textX, yPos, { align: "right" });
               }
 
-              yPos += 8;
+              yPos += 8; // Next row
             });
 
             // Footer
@@ -1064,8 +1030,21 @@
 
             // Save the PDF
             doc.save("Mortgage_Cost_of_Waiting_Report.pdf");
-          });
 
+            // Helper function to format change values
+            function formatChangeValue(value, isCurrency) {
+              if (isCurrency) {
+                return new Intl.NumberFormat("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
+                }).format(Math.abs(value));
+              } else {
+                return Math.abs(value).toFixed(2) + "%";
+              }
+            }
+          });
         function calculateResults() {
           // Get input values
           const purchasePrice = parseFloat(

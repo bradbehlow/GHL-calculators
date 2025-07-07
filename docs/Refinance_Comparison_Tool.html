@@ -710,6 +710,28 @@
           font-size: 0.85rem;
         }
       }
+      .scenario-tabs-container {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+}
+.scenario-tabs-container .tab {
+    padding: 8px 15px;
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.scenario-tabs-container .tab.active {
+    background: #6BC14B;
+    color: white;
+    border-color: #6BC14B;
+}
+#compareWrap {
+    margin-top: 20px;
+    display: none;
+}
  
 </style>
 <div id="hm2_cl">
@@ -740,6 +762,11 @@
                    
                     
                 </p>
+
+                <div id="scenarioTabs" class="scenario-tabs-container" style="margin-bottom: 20px;">
+    <button class="tab active" data-id="scenario1">Scenario 1</button>
+    <button id="addTab">+ Add Scenario</button>
+</div>
                 
                 <div class="row">
                     <div class="col-md-6">
@@ -1136,7 +1163,26 @@
 
                 </div>
             </div>
+            
         </div>
+                    <div id="compareWrap" style="margin-top: 20px; display: none;">
+    <h3>Scenario Comparison</h3>
+    <table class="sp-table">
+        <thead>
+            <tr>
+                <th>Scenario</th>
+                <th>Term</th>
+                <th>Rate</th>
+                <th>Payment</th>
+                <th>Monthly Savings</th>
+                <th>Life Savings</th>
+            </tr>
+        </thead>
+        <tbody id="compareBody"></tbody>
+    </table>
+</div>
+      
+
         <div class="disclaimer">
                 <h3>Disclaimer</h3>
                 <p>
@@ -1147,6 +1193,9 @@
                 reference tool only.
                 </p>
             </div>
+
+  
+            
     </div>
 
 </div>
@@ -1317,6 +1366,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.8.0/html2pdf.bundle.min.js"></script>
 <script>
 jQuery(document).ready(function($){
+    // Scenario management
+    let scenarios = [];
+    let activeScenarioId = null;
+    
+    // Number formatting
     const hm2_nft = Intl.NumberFormat("en-US", {
         minimumFractionDigits: 0,
         maximumFractionDigits: 0
@@ -1326,6 +1380,7 @@ jQuery(document).ready(function($){
         maximumFractionDigits: 2
     });
 
+    // AutoNumeric configuration
     const hm2_numOptionCurrency = {
         digitGroupSeparator        : ',',
         decimalCharacter           : '.',
@@ -1344,74 +1399,228 @@ jQuery(document).ready(function($){
         minimumValue               : 0,
         maximumValue               : 100
     };
-    const anElement1 = AutoNumeric.multiple('.hm2_cl-curr', hm2_numOptionCurrency);
-    const anElement2 = AutoNumeric.multiple('.hm2_cl-pr', hm2_numOptionPercent);
 
+    // Initialize AutoNumeric
+    new AutoNumeric.multiple('.hm2_cl-curr', hm2_numOptionCurrency);
+    new AutoNumeric.multiple('.hm2_cl-pr', hm2_numOptionPercent);
+    
+    // Initialize first scenario
+    function initFirstScenario() {
+        const scenario = {
+            id: 'scenario1',
+            label: 'Scenario 1',
+            inputs: {
+                origAmount: 0,
+                origTerm: 30,
+                currRate: 0,
+                newAmount: 0,
+                newTerm: 30,
+                newRate: 0,
+                homeValue: 0,
+                taxes: 0,
+                insurance: 0,
+                pmi: 0,
+                closingCosts: 5000,
+                debts: []
+            },
+            outputs: {}
+        };
+        scenarios = [scenario];
+        activeScenarioId = scenario.id;
+        renderTabs();
+        loadScenario(scenario);
+    }
+    
+    // Render scenario tabs
+   function renderTabs() {
+    const $wrap = $('#scenarioTabs').empty();
+    scenarios.forEach(s => {
+        $wrap.append(`<button class="tab ${s.id===activeScenarioId?'active':''}"
+                           data-id="${s.id}">${s.label}</button>`);
+    });
+    $wrap.append(`<button id="addTab" class="add-tab-btn">+ Add Scenario</button>`);
+}
+    // Load scenario data into form
+// Update the loadScenario function to this:
+function loadScenario(scenario) {
+    const i = scenario.inputs;
+    
+    // Set values without triggering events
+    $("#hm2_in_1").val(i.origAmount);
+    $("#hm2_in_2").val(i.origTerm);
+    $("#hm2_in_3").val(i.currRate);
+    $("#hm2_in_4").val(i.newAmount);
+    $("#hm2_in_5").val(i.newTerm);
+    $("#hm2_in_6").val(i.newRate);
+    $("#hm2_in_7").val(i.homeValue || 0);
+    $("#hm2_in_8").val(i.taxes);
+    $("#hm2_in_9").val(i.insurance);
+    $("#hm2_in_10").val(i.pmi);
+    
+    // Handle debts
+    $("#all_debts_sec").empty();
+    i.debts.forEach(debt => {
+        addDebtRow(debt);
+    });
+    
+    // Update comparison table
+    renderComparisonTable();
+}
+
+    // Save form data to current scenario
+    function saveCurrentScenario() {
+        const scenario = scenarios.find(s => s.id === activeScenarioId);
+        if (!scenario) return;
+        
+        scenario.inputs = {
+            origAmount: hm2_removeSign($("#hm2_in_1").val()),
+            origTerm: hm2_removeSign($("#hm2_in_2").val()),
+            currRate: hm2_removeSign($("#hm2_in_3").val()),
+            newAmount: hm2_removeSign($("#hm2_in_4").val()),
+            newTerm: hm2_removeSign($("#hm2_in_5").val()),
+            newRate: hm2_removeSign($("#hm2_in_6").val()),
+            homeValue: hm2_removeSign($("#hm2_in_7").val()),
+            taxes: hm2_removeSign($("#hm2_in_8").val()),
+            insurance: hm2_removeSign($("#hm2_in_9").val()),
+            pmi: hm2_removeSign($("#hm2_in_10").val()),
+            debts: getCurrentDebts()
+        };
+    }
+    
+    function getCurrentDebts() {
+        const debts = [];
+        $(".debts-row").each(function() {
+            debts.push({
+                lender: $(this).find("td:eq(0) .debts-in").val(),
+                payment: hm2_removeSign($(this).find("td:eq(1) .debts-in").val()),
+                balance: hm2_removeSign($(this).find("td:eq(2) .debts-in").val()),
+                paid: $(this).find("td:eq(3) .debts-in").val()
+            });
+        });
+        return debts;
+    }
+    
+function addDebtRow(debt = {lender: '', payment: '', balance: '', paid: 'Yes'}) {
+    const row = `<tr class="debts-row">
+        <td><input type="text" class="tb-form-control debts-in" value="${debt.lender || ''}"></td>
+        <td><input type="text" class="tb-form-control debts-in num-input" value="${debt.payment || ''}"></td>
+        <td><input type="text" class="tb-form-control debts-in num-input" value="${debt.balance || ''}"></td>
+        <td>
+            <select class="tb-form-control debts-in">
+                <option value="">--Select--</option>
+                <option value="Yes" ${debt.paid === 'Yes' ? 'selected' : ''}>Yes</option>
+                <option value="No" ${debt.paid === 'No' ? 'selected' : ''}>No</option>
+            </select>
+        </td>
+    </tr>`;
+    
+    $("#all_debts_sec").append(row);
+    
+    // Initialize AutoNumeric only for numeric inputs
+    new AutoNumeric.multiple('#all_debts_sec .debts-row:last-child .num-input', {
+        digitGroupSeparator: ',',
+        decimalCharacter: '.',
+        decimalPlaces: 0
+    });
+}
+function renderComparisonTable() {
+    if (scenarios.length < 2) {
+        $('#compareWrap').hide();
+        return;
+    }
+    
+    const rows = scenarios.map(s => {
+        // Format numbers properly using your existing formatters
+        const rateFormatted = (s.inputs.newRate * 100).toFixed(3);
+        const paymentFormatted = hm2_nftd.format(s.outputs.newPayment || 0);
+        const monthlySavingsFormatted = hm2_nftd.format(s.outputs.monthlySavings || 0);
+        const lifeSavingsFormatted = hm2_nftd.format(s.outputs.lifeSavings || 0);
+        
+        return `
+            <tr ${s.id === activeScenarioId ? 'class="active-scenario"' : ''}>
+                <td>${s.label}</td>
+                <td>${s.inputs.newTerm} yr</td>
+                <td>${rateFormatted}%</td>
+                <td>$${paymentFormatted}</td>
+                <td>$${monthlySavingsFormatted}</td>
+                <td>$${lifeSavingsFormatted}</td>
+            </tr>`;
+    }).join('');
+    
+    $('#compareBody').html(rows);
+    $('#compareWrap').show();
+}
+
+    // Modified event handlers
     $(".hm2_cl-input").on("input", function(){
+        saveCurrentScenario();
         hm2_calc();
     });
+    
     $(document).on("input", ".debts-in", function(){
+        saveCurrentScenario();
         hm2_calc();
     });
 
     $("#add_debts_btn").on("click", function() {
-        let debts_form = `<tr class="debts-row">
-                                <td>
-                                    <input type="text" class="tb-form-control debts-in hm2_cl-input">
-                                </td>
-                                <td>
-                                    <input type="text" class="tb-form-control debts-in hm2_cl-input">
-                                </td>
-                                <td>
-                                    <input type="text" class="tb-form-control debts-in hm2_cl-input">
-                                </td>
-                                <td>
-                                    <select name="" class="tb-form-control debts-in hm2_cl-input">
-                                        <option data-value="">--Select--</option>
-                                        <option data-value="Yes" selected>Yes</option>
-                                        <option data-value="No">No</option>
-                                    </select>
-                                </td>
-                        </tr>`;
-
-        $("#all_debts_sec").append(debts_form);
+        addDebtRow();
+        saveCurrentScenario();
+        hm2_calc();
     });
 
-    hm2_calc();
-
-    $('#btn_download').on('click', function(){
-        $(this).prop('disabled', true);
-        $('#btn_download').text("Downloading....");
-        genPDF();
-        setTimeout(() => {
-            $('#btn_download').prop('disabled', false);
-            $('#btn_download').text("Download");
-        }, 500);
-    });
-
-    function genPDF(){
-        var d = new Date();
-        let date_time = d.getMonth() + 1+"_"+ d.getDate() + "_"+d.getFullYear()+"_"+d.getHours()+"_"+d.getMinutes()+"_"+d.getSeconds();
-        var element = document.getElementById('pdf_data');
-        html2pdf(element, {
-            margin:       10,
-            enableLinks:  true,
-            filename:     'Loan_Calculator_'+date_time+".pdf",
-         //   image:        { type: 'jpeg', quality: 1 },
-          //  html2canvas:  { scale: 2, logging: false },
-            image: { type: 'png', quality: 100 }, // Already set to maximum
-            html2canvas: { 
-                 useCORS: true, // Ensure this is added
-                 logging: false,                 
-                allowTaint: true, // If CORS fails
-                letterRendering: true, // Better text & image rendering
-                scale: 5, // ↑ Increase from 2 to 4 (max recommended) 
-            },
-            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        });
+    // Scenario tab events
+$(document).on('click', '#scenarioTabs .tab:not(#addTab)', function() {
+    const id = $(this).data('id');
+    const scenario = scenarios.find(s => s.id === id);
+    if (scenario) {
+        activeScenarioId = id;
+        renderTabs();
+        loadScenario(scenario);
     }
+});
+$('#scenarioTabs').on('click', '#addTab', function(e) {
+    e.preventDefault();
+    const currentScenario = scenarios.find(s => s.id === activeScenarioId);
+    if (!currentScenario) return;
+    
+    const newId = 'scenario-' + Date.now();
+    const newScenario = {
+        id: newId,
+        label: 'Scenario ' + (scenarios.length + 1),
+        inputs: JSON.parse(JSON.stringify(currentScenario.inputs)),
+        outputs: {}
+    };
+    
+    scenarios.push(newScenario);
+    activeScenarioId = newId;
+    renderTabs();
+    loadScenario(newScenario);
+});
+    
+// Update the addTab click handler to this:
+$('#addTab').on('click', function() {
+    const currentScenario = scenarios.find(s => s.id === activeScenarioId);
+    if (!currentScenario) return;
+    
+    const newId = 'scenario' + Date.now(); // Use timestamp for unique ID
+    const newScenario = {
+        id: newId,
+        label: 'Scenario ' + (scenarios.length + 1),
+        inputs: JSON.parse(JSON.stringify(currentScenario.inputs)),
+        outputs: {}
+    };
+    
+    scenarios.push(newScenario);
+    activeScenarioId = newId;
+    renderTabs();
+    loadScenario(newScenario);
+});
 
+    // Main calculation function
     function hm2_calc(){
+        const scenario = scenarios.find(s => s.id === activeScenarioId);
+        if (!scenario) return;
+        
         hm2_in_1 =  hm2_removeSign($("#hm2_in_1").val());
         hm2_in_2 =  hm2_removeSign($("#hm2_in_2").val());
         hm2_in_3 =  hm2_removeSign($("#hm2_in_3").val()) / 100;
@@ -1455,7 +1664,6 @@ jQuery(document).ready(function($){
         $("#debts_paid_rs_1").text("$" + hm2_nftd.format(debt_total));
         $("#debts_paid_rs_2").text("$" + hm2_nftd.format(debt_balance));
 
-
         let current_pi = PMT(hm2_in_3 / 12, hm2_in_2 * 12, (-1 * hm2_in_1));
         let propose_mortgage_bl = PMT(hm2_in_6 / 12, hm2_in_5 * 12, (-1 * hm2_in_4));
 
@@ -1463,7 +1671,6 @@ jQuery(document).ready(function($){
         let proposed_pmi = 0;
         let new_payment = propose_mortgage_bl + hm2_in_8 + hm2_in_9 + proposed_pmi;
         
-
         let total_current_outflow =  all_balance_total + current_paymenent;
         let new_outflow = all_balance_total - debt_total + new_payment;
         let current_total_payment = all_balance_total + current_paymenent;
@@ -1473,17 +1680,24 @@ jQuery(document).ready(function($){
         let five_year_savings = yearly_savings * 5;
         let life_loan_savings =  total_savings * (hm2_in_5 * 12);
 
-
         let new_paymnt = new_payment + debt_total;
         let total_new_payment = nper(hm2_in_3/12, (-1*new_paymnt), hm2_in_1);
-
         let year_remove_curr_payment = total_new_payment / 12;
 
-       // let cash_back_closing = (((hm2_in_4 - hm2_in_1) - debt_balance) );
-        
-        
+        // Store outputs in current scenario
+        scenario.outputs = {
+            currentPayment: current_paymenent,
+            newPayment: new_payment,
+            totalCurrentOutflow: total_current_outflow,
+            newOutflow: new_outflow,
+            monthlySavings: total_savings,
+            yearlySavings: yearly_savings,
+            fiveYearSavings: five_year_savings,
+            lifeSavings: life_loan_savings,
+            yearsRemoved: year_remove_curr_payment
+        };
 
-
+        // Update UI
         $("#sv_rs_1, #pdf_sv_rs_1").text("$" + hm2_nftd.format(total_savings));
         $("#hm2_rs_1, #pdf_rs_1").text("$" + hm2_nftd.format(current_paymenent));
         $("#hm2_rs_2, #pdf_rs_2").text("$" + hm2_nft.format(new_payment));
@@ -1494,7 +1708,6 @@ jQuery(document).ready(function($){
         $("#hm2_rs_7, #pdf_rs_7").text("$" + hm2_nftd.format(five_year_savings));
         $("#hm2_rs_8, #pdf_rs_8").text("$" + hm2_nftd.format(life_loan_savings));
         $("#hm2_rs_9, #pdf_rs_9").text(hm2_nft.format(year_remove_curr_payment));
-        //$("#hm2_rs_10, #pdf_rs_10").text("$" + hm2_nftd.format(cash_back_closing));
 
         $("#nl_rs_1").text("$" + hm2_nftd.format(all_balance_total));
         $("#nl_rs_2").text("$" + hm2_nftd.format(no_total));
@@ -1532,6 +1745,11 @@ jQuery(document).ready(function($){
         $("#pdf_in_9").text("$" + hm2_nftd.format(hm2_in_9));
         $("#pdf_in_10").text("$" + hm2_nftd.format(hm2_in_10));
         $("#pdf_in_apr").text(hm2_nftd.format(in_apr)+"%");
+
+        // Update comparison table if multiple scenarios
+       // if (scenarios.length > 1) {
+            renderComparisonTable();
+      //  }
     }
 
     function hm2_removeSign(vl){
@@ -1556,9 +1774,7 @@ jQuery(document).ready(function($){
 
     function nper(rate, payment, present, future, type) {
         var type = (typeof type === 'undefined') ? 0 : type;
-
         var future = (typeof future === 'undefined') ? 0 : future;
-
         rate = eval(rate);
 
         var num = payment * (1 + rate * type) - future * rate;
@@ -1585,7 +1801,41 @@ jQuery(document).ready(function($){
     toDataUrl(src, function(myBase64) {
         $("#my_logo").attr("src", myBase64);
     });
+
+    $('#btn_download').on('click', function(){
+        $(this).prop('disabled', true);
+        $('#btn_download').text("Downloading....");
+        genPDF();
+        setTimeout(() => {
+            $('#btn_download').prop('disabled', false);
+            $('#btn_download').text("Download");
+        }, 500);
+    });
+
+    function genPDF(){
+        var d = new Date();
+        let date_time = d.getMonth() + 1+"_"+ d.getDate() + "_"+d.getFullYear()+"_"+d.getHours()+"_"+d.getMinutes()+"_"+d.getSeconds();
+        var element = document.getElementById('pdf_data');
+        html2pdf(element, {
+            margin:       10,
+            enableLinks:  true,
+            filename:     'Loan_Calculator_'+date_time+".pdf",
+            image: { type: 'png', quality: 100 },
+            html2canvas: { 
+                 useCORS: true,
+                 logging: false,                 
+                allowTaint: true,
+                letterRendering: true,
+                scale: 5,
+            },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        });
+    }
+
+    // Initialize
+    initFirstScenario();
 });
+
 </script>
 
 </html>

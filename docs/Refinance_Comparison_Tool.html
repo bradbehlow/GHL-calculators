@@ -1107,14 +1107,14 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <!-- <div class="col-md-6">
                                 <div class="rs-sec">
                                     <div class="rs-sp-vl-sec text-center">
                                         <h4 class="rs-sub-title-sp" style="color: #26459E;">Cash Back at Closing</h4>
                                         <h2 class="rs-sp-value" id="hm2_rs_10">$0.00</h2>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                     <div class="col-md-12"><br/></div>
@@ -1299,7 +1299,7 @@
                 <thead>
                     <tr>
                         <th class="pdf-rs-title" style="width: 50%;">Years Removed with Current Payment</th>
-                        <th class="pdf-rs-title" style="width: 50%;">Cash Back at Closing</th>
+                        <!-- <th class="pdf-rs-title" style="width: 50%;">Cash Back at Closing</th> -->
                     </tr>
                 </thead>
                 <tbody>
@@ -1479,7 +1479,7 @@ jQuery(document).ready(function($){
 
         let year_remove_curr_payment = total_new_payment / 12;
 
-        let cash_back_closing = (((hm2_in_4 - hm2_in_1) - debt_balance) - 5000);
+       // let cash_back_closing = (((hm2_in_4 - hm2_in_1) - debt_balance) );
         
         
 
@@ -1494,7 +1494,7 @@ jQuery(document).ready(function($){
         $("#hm2_rs_7, #pdf_rs_7").text("$" + hm2_nftd.format(five_year_savings));
         $("#hm2_rs_8, #pdf_rs_8").text("$" + hm2_nftd.format(life_loan_savings));
         $("#hm2_rs_9, #pdf_rs_9").text(hm2_nft.format(year_remove_curr_payment));
-        $("#hm2_rs_10, #pdf_rs_10").text("$" + hm2_nftd.format(cash_back_closing));
+        //$("#hm2_rs_10, #pdf_rs_10").text("$" + hm2_nftd.format(cash_back_closing));
 
         $("#nl_rs_1").text("$" + hm2_nftd.format(all_balance_total));
         $("#nl_rs_2").text("$" + hm2_nftd.format(no_total));

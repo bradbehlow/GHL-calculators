@@ -1803,11 +1803,11 @@ $('#addTab').on('click', function() {
         xhr.send();
     }
 
-    let src = $("#my_logo").attr("src");
+  //  let src = $("#my_logo").attr("src");
 
-    toDataUrl(src, function(myBase64) {
-        $("#my_logo").attr("src", myBase64);
-    });
+ //   toDataUrl(src, function(myBase64) {
+ //       $("#my_logo").attr("src", myBase64);
+  //  });
 
     $('#btn_download').on('click', function(){
         $(this).prop('disabled', true);
@@ -1819,6 +1819,7 @@ $('#addTab').on('click', function() {
         }, 500);
     });
 
+    /*
     function genPDF(){
         var d = new Date();
         let date_time = d.getMonth() + 1+"_"+ d.getDate() + "_"+d.getFullYear()+"_"+d.getHours()+"_"+d.getMinutes()+"_"+d.getSeconds();
@@ -1838,6 +1839,22 @@ $('#addTab').on('click', function() {
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
         });
     }
+        */
+
+    function genPDF(){
+    var element = document.getElementById('pdf_data');
+    html2pdf(element, {
+        margin: 10,
+        filename: 'Refinance_Comparison.pdf', // Simpler filename
+        image: { type: 'jpeg', quality: 0.98 }, // Slightly compressed
+        html2canvas: { 
+            scale: 3, // Reduced from 5 (still HD)
+            logging: false,
+            useCORS: true
+        },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    });
+}
 
     // Initialize
     initFirstScenario();

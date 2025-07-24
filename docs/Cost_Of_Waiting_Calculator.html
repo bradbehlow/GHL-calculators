@@ -290,8 +290,8 @@
         position: absolute;
         z-index: 1;
         bottom: 125%;
-        left: 90%;
-        transform: translateX(-90%);
+        left: 100%;
+        transform: translateX(-100%);
         opacity: 0;
         transition: opacity 0.3s;
         font-size: 0.875rem;
@@ -656,7 +656,7 @@
                 10 Years
               </p>
             </div>
-            <div class="bg-white rounded-xl shadow-lg p-6 text-center">
+            <!-- <div class="bg-white rounded-xl shadow-lg p-6 text-center">
               <h3 class="serif-italic text-lg font-bold text-black-500 mb-1">
                 <span class="yellow-underline2">Lost Equity and</span><br />Down
                 Payment
@@ -664,6 +664,35 @@
               <p id="lostEquity" class="text-3xl font-bold text-gray-800">
                 $33,000
               </p>
+            </div> -->
+            <!-- Updated KPI Tile (in the top metrics section) -->
+            <div class="bg-white rounded-xl shadow-lg p-6 text-center relative">
+              <!-- Tooltip Icon (Top-Right) -->
+              <div class="absolute top-2 right-2 tooltip-container">
+                <i class="fas fa-info-circle text-gray-400 cursor-pointer"></i>
+                <span class="tooltip-content1">
+                  <div class="text-sm">
+                    <div class="flex justify-between">
+                      <span>Principal paid in Year 1</span>
+                      <span id="tooltipPrincipal">$0</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span>Extra down payment later</span>
+                      <span id="tooltipExtraDown">$0</span>
+                    </div>
+                    <hr class="my-1 border-gray-400" />
+                    <div class="flex justify-between font-semibold">
+                      <span>Lost Equity & Down Pmt</span>
+                      <span id="tooltipTotal">$0</span>
+                    </div>
+                  </div>
+                </span>
+              </div>
+              <h3 class="serif-italic text-lg font-bold text-black-500 mb-1">
+                <span class="yellow-underline2">Lost Equity and</span><br />Down
+                Payment
+              </h3>
+              <p id="lostEquity" class="text-3xl font-bold text-gray-800">$0</p>
             </div>
           </div>
 
@@ -868,7 +897,7 @@
 
                   <!-- Update the grey sub-row (add Font Awesome and fix tooltip) -->
                   <!-- Add this after the last table row (before </tbody>) -->
-                  <tr id="lostEquityRow" class="bg-gray-50">
+                  <!-- <tr id="lostEquityRow" class="bg-gray-50">
                     <td class="px-6 py-2 text-sm font-medium text-gray-800">
                       Lost Equity & Down Pmt
                     </td>
@@ -878,9 +907,9 @@
                     >
                       <div
                         class="tooltip-container inline-flex items-center tooltip-left"
-                      >
-                        <!-- Add 'tooltip-left' class -->
-                        <span id="lostEquityAndDownPmt">$0</span>
+                      > -->
+                  <!-- Add 'tooltip-left' class -->
+                  <!-- <span id="lostEquityAndDownPmt">$0</span>
                         <i class="fas fa-info-circle ml-1 text-gray-400"></i>
                         <span class="tooltip-content1">
                           <div class="text-sm">
@@ -901,7 +930,7 @@
                         </span>
                       </div>
                     </td>
-                  </tr>
+                  </tr> -->
                   <!-- dfdf -->
                 </tbody>
               </table>
@@ -1278,6 +1307,7 @@
           const delta = buyLaterInterestRate - interestRate;
           const label = delta >= 0 ? "higher" : "lower";
           const ui = `${Math.abs(delta).toFixed(2)}% ${label}`;
+
           //====================================================
 
           // Calculate years to recapture
@@ -1312,8 +1342,8 @@
               ? "px-6 py-4 text-sm increase"
               : "px-6 py-4 text-sm decrease";
           //================================================================================
-          // Update LE/DP display
-          document.getElementById("lostEquityAndDownPmt").textContent =
+          // Update LE/DP (KPI Tile + Tooltip Only)
+          document.getElementById("lostEquity").textContent =
             formatCurrency(lostEqAndDP);
           document.getElementById("tooltipPrincipal").textContent =
             formatCurrency(principalPaidYr1);
@@ -1322,14 +1352,15 @@
           document.getElementById("tooltipTotal").textContent =
             formatCurrency(lostEqAndDP);
 
-          // Update rate change display
-          document.getElementById("rateChangeDisplay").textContent = ui;
+          document.getElementById(
+            "rateChangeDisplay"
+          ).textContent = `${Math.abs(delta).toFixed(2)}% ${label}`;
           document.getElementById("rateChangeDisplay").className =
             delta >= 0
-              ? "px-6 py-4 text-sm increase text-danger"
-              : "px-6 py-4 text-sm decrease text-success";
+              ? "px-6 py-4 text-sm text-danger"
+              : "px-6 py-4 text-sm text-success";
 
-          // Update rate tooltip
+          // Update Rate Tooltip
           document.getElementById("tooltipCurrentRate").textContent =
             formatPercent(interestRate);
           document.getElementById("tooltipFutureRate").textContent =
@@ -1337,8 +1368,6 @@
           document.getElementById(
             "tooltipRateChange"
           ).textContent = `${formatPercentChange(delta)} ${label}`;
-          //=====================================================
-
           //==========================================================================
 
           document.getElementById("buyNowDown").textContent =

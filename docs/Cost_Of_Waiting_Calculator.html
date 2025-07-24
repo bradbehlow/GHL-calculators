@@ -12,6 +12,10 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;1,300;1,400&display=swap"
       rel="stylesheet"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
     <style>
       body {
         font-family: "Inter", sans-serif;
@@ -79,6 +83,16 @@
       }
       .input-group input.with-suffix {
         padding-right: 28px;
+      }
+
+      /* Hide number input spinners */
+      .no-spin::-webkit-outer-spin-button,
+      .no-spin::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+      .no-spin {
+        -moz-appearance: textfield;
       }
       .increase {
         color: #ef4444;
@@ -257,6 +271,83 @@
 
       /*    ====================*/
 
+      /*tool tip for last row */
+
+      .tooltip-container {
+        position: relative;
+        display: inline-block;
+        cursor: pointer;
+      }
+
+      .tooltip-content1 {
+        visibility: hidden;
+        width: 240px;
+        background-color: #333;
+        color: #fff;
+        text-align: left;
+        border-radius: 6px;
+        padding: 10px;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%;
+        left: 90%;
+        transform: translateX(-90%);
+        opacity: 0;
+        transition: opacity 0.3s;
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+      }
+
+      .tooltip-container:hover .tooltip-content1 {
+        visibility: visible;
+        opacity: 1;
+      }
+
+      .tooltip-indicator {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 16px;
+        height: 16px;
+        border: 1px solid #64748b;
+        border-radius: 50%;
+        color: #64748b;
+        font-size: 10px;
+        font-style: italic;
+        margin-left: 4px;
+        cursor: pointer;
+      }
+
+      /* Mobile Responsive Adjustments */
+      @media (max-width: 768px) {
+        .tooltip-content1 {
+          width: 180px;
+          font-size: 0.75rem;
+          line-height: 1.2;
+          padding: 8px;
+        }
+
+        .tooltip-right .tooltip-content1 {
+          left: 0;
+          right: 0;
+          transform: none;
+        }
+
+        .tooltip-left .tooltip-content1 {
+          left: 0;
+          right: auto;
+          transform: none;
+        }
+      }
+
+      /* Touch Device Support */
+      @media (hover: none) {
+        .tooltip-active .tooltip-content1 {
+          visibility: visible;
+          opacity: 1;
+        }
+      }
+
       /* ===== Tooltip System - Updated Class Names ===== */
       .tooltip-container {
         position: relative;
@@ -275,8 +366,8 @@
         position: absolute;
         z-index: 1;
         bottom: 125%;
-        left: 90%;
-        transform: translateX(-90%);
+        right: 90%;
+        transform: translateX(90%);
         opacity: 0;
         transition: opacity 0.3s;
         font-size: 0.875rem;
@@ -373,8 +464,9 @@
                   <input
                     type="number"
                     id="purchasePrice"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 no-spin"
                     value="500000"
+                    onwheel="this.blur()"
                   />
                 </div>
               </div>
@@ -389,8 +481,9 @@
                   <input
                     type="number"
                     id="downPayment"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 with-suffix"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 with-suffix no-spin"
                     value="10"
+                    onwheel="this.blur()"
                   />
                   <span class="suffix">%</span>
                 </div>
@@ -414,9 +507,10 @@
                   <input
                     type="number"
                     id="interestRate"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 with-suffix"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 with-suffix no-spin"
                     step="0.01"
                     value="7.25"
+                    onwheel="this.blur()"
                   />
                   <span class="suffix">%</span>
                 </div>
@@ -440,9 +534,10 @@
                   <input
                     type="number"
                     id="averageFees"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 with-suffix"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 with-suffix no-spin"
                     step="0.01"
                     value="1.25"
+                    onwheel="this.blur()"
                   />
                   <span class="suffix">%</span>
                 </div>
@@ -466,9 +561,10 @@
                   <input
                     type="number"
                     id="homeAppreciation"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 with-suffix"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 with-suffix no-spin"
                     step="0.01"
                     value="6"
+                    onwheel="this.blur()"
                   />
                   <span class="suffix">%</span>
                 </div>
@@ -492,9 +588,10 @@
                   <input
                     type="number"
                     id="rateChange"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 with-suffix"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 with-suffix no-spin"
                     step="0.01"
                     value="-1.5"
+                    onwheel="this.blur()"
                   />
                   <span class="suffix">%</span>
                 </div>
@@ -712,15 +809,22 @@
                     </td>
                   </tr>
                   <tr>
+                    <!-- change --------------------------------- -->
                     <td class="px-6 py-4 text-sm font-medium text-gray-800">
-                      Interest Rate
+                      Rate Change (Future – Today)
                       <span class="tooltip-container tooltip-right ml-1">
                         <span class="tooltip-indicator">i</span>
-                        <span class="tooltip-content"
-                          >The interest rate for a 30-year fixed mortgage.</span
-                        >
+                        <span class="tooltip-content">
+                          Today's rate:
+                          <span id="tooltipCurrentRate">7.25%</span><br />
+                          Future rate: <span id="tooltipFutureRate">5.75%</span
+                          ><br />
+                          Change:
+                          <span id="tooltipRateChange">-1.50% lower</span>
+                        </span>
                       </span>
                     </td>
+                    <!-- ------------------------------------------ -->
                     <td
                       id="buyNowRate"
                       class="px-6 py-4 text-sm text-gray-700 table-value"
@@ -760,6 +864,45 @@
                       ↓ -1.122%
                     </td>
                   </tr>
+                  <!-- Replace the existing grey row with this one -->
+
+                  <!-- Update the grey sub-row (add Font Awesome and fix tooltip) -->
+                  <!-- Add this after the last table row (before </tbody>) -->
+                  <tr id="lostEquityRow" class="bg-gray-50">
+                    <td class="px-6 py-2 text-sm font-medium text-gray-800">
+                      Lost Equity & Down Pmt
+                    </td>
+                    <td
+                      colspan="3"
+                      class="px-6 py-2 text-sm text-gray-700 table-value"
+                    >
+                      <div
+                        class="tooltip-container inline-flex items-center tooltip-left"
+                      >
+                        <!-- Add 'tooltip-left' class -->
+                        <span id="lostEquityAndDownPmt">$0</span>
+                        <i class="fas fa-info-circle ml-1 text-gray-400"></i>
+                        <span class="tooltip-content1">
+                          <div class="text-sm">
+                            <div class="flex justify-between">
+                              <span>Principal paid in Year 1</span>
+                              <span id="tooltipPrincipal">$0</span>
+                            </div>
+                            <div class="flex justify-between">
+                              <span>Extra down payment later</span>
+                              <span id="tooltipExtraDown">$0</span>
+                            </div>
+                            <hr class="my-1 border-gray-400" />
+                            <div class="flex justify-between font-semibold">
+                              <span>Lost Equity & Down Pmt</span>
+                              <span id="tooltipTotal">$0</span>
+                            </div>
+                          </div>
+                        </span>
+                      </div>
+                    </td>
+                  </tr>
+                  <!-- dfdf -->
                 </tbody>
               </table>
             </div>
@@ -771,6 +914,7 @@
           </div>
         </div>
       </div>
+
       <div class="disclaimer">
         <h3>Disclaimer</h3>
         <p>
@@ -1101,6 +1245,41 @@
           // Calculate lost equity
           const lostEquityValue = downPaymentChange + feesChange;
 
+          //========================================================
+
+          // Add after monthly payment calculations
+          const principalPaidYr1 = calculateFirstYearPrincipal(
+            buyNowLoanAmount,
+            buyNowMonthlyRate,
+            buyNowMonthlyPayment
+          );
+          const extraDownPmt = buyLaterDownPayment - buyNowDownPayment;
+          const lostEqAndDP = principalPaidYr1 + extraDownPmt;
+
+          // Helper function to calculate first year principal
+          function calculateFirstYearPrincipal(
+            loanAmount,
+            monthlyRate,
+            monthlyPayment
+          ) {
+            let balance = loanAmount;
+            let totalPrincipal = 0;
+
+            for (let month = 1; month <= 12; month++) {
+              const interest = balance * monthlyRate;
+              const principal = monthlyPayment - interest;
+              totalPrincipal += principal;
+              balance -= principal;
+            }
+
+            return totalPrincipal;
+          }
+
+          const delta = buyLaterInterestRate - interestRate;
+          const label = delta >= 0 ? "higher" : "lower";
+          const ui = `${Math.abs(delta).toFixed(2)}% ${label}`;
+          //====================================================
+
           // Calculate years to recapture
           // Simplified calculation: lost equity divided by monthly payment savings (if any)
           let yearsToRecapture = 10; // Default value
@@ -1132,6 +1311,35 @@
             priceChange > 0
               ? "px-6 py-4 text-sm increase"
               : "px-6 py-4 text-sm decrease";
+          //================================================================================
+          // Update LE/DP display
+          document.getElementById("lostEquityAndDownPmt").textContent =
+            formatCurrency(lostEqAndDP);
+          document.getElementById("tooltipPrincipal").textContent =
+            formatCurrency(principalPaidYr1);
+          document.getElementById("tooltipExtraDown").textContent =
+            formatCurrency(extraDownPmt);
+          document.getElementById("tooltipTotal").textContent =
+            formatCurrency(lostEqAndDP);
+
+          // Update rate change display
+          document.getElementById("rateChangeDisplay").textContent = ui;
+          document.getElementById("rateChangeDisplay").className =
+            delta >= 0
+              ? "px-6 py-4 text-sm increase text-danger"
+              : "px-6 py-4 text-sm decrease text-success";
+
+          // Update rate tooltip
+          document.getElementById("tooltipCurrentRate").textContent =
+            formatPercent(interestRate);
+          document.getElementById("tooltipFutureRate").textContent =
+            formatPercent(buyLaterInterestRate);
+          document.getElementById(
+            "tooltipRateChange"
+          ).textContent = `${formatPercentChange(delta)} ${label}`;
+          //=====================================================
+
+          //==========================================================================
 
           document.getElementById("buyNowDown").textContent =
             formatCurrency(buyNowDownPayment);

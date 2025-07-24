@@ -539,7 +539,7 @@
     border-right: none !important;
     border-left: none !important;
     border-top: none !important;
-    border-bottom: none !important;
+    border-bottom: 1px solid #6BC14B !important;
     font-weight: 400;
     text-align: left;
     font-size: 12px !important;
@@ -551,6 +551,9 @@
     font-size: 14px !important;
     font-weight: 500;
     border-bottom: 1px solid #6BC14B !important;
+      color: #000000;
+    text-align: left;
+    padding: 8px 4px; /* Adjust padding as needed */
 }
 #pdf_data #pdf_graph {
     height: 400px;
@@ -732,6 +735,18 @@
     margin-top: 20px;
     display: none;
 }
+/* Add to the style section */
+#hm2_cl .apr-field {
+    transition: all 0.3s ease;
+}
+#hm2_cl .toggle-apr {
+    color: #6BC14B;
+    text-decoration: none;
+    font-size: 0.9em;
+}
+#hm2_cl .toggle-apr:hover {
+    text-decoration: underline;
+}
  
 </style>
 <div id="hm2_cl">
@@ -867,96 +882,41 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-12 all-debts-sec">
-                        <h3 class="all-debts-sec-title">All Debts</h3>
-                        <div style="overflow-x: auto;">
-                            <table class="table" style="min-width: 430px;">
-                                <thead>
-                                    <tr>
-                                        <th>Lender</th>
-                                        <th>Payment</th>
-                                        <th>Balance</th>
-                                        <th style="min-width: 85px;">Paid at close?</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="all_debts_sec">
-                                    <tr class="debts-row">
-                                        <td>
-                                            <input type="text" class="tb-form-control debts-in hm2_cl-input" value="">
-                                        </td>
-                                        <td>
-                                            <input type="text" class="tb-form-control debts-in hm2_cl-input" value="">
-                                        </td>
-                                        <td>
-                                            <input type="text" class="tb-form-control debts-in hm2_cl-input" value="">
-                                        </td>
-                                        <td>
-                                            <select name="" class="tb-form-control debts-in hm2_cl-input">
-                                                <option data-value="">--Select--</option>
-                                                <option data-value="Yes" selected>Yes</option>
-                                                <option data-value="No">No</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr class="debts-row">
-                                        <td>
-                                            <input type="text" class="tb-form-control debts-in hm2_cl-input" value="">
-                                        </td>
-                                        <td>
-                                            <input type="text" class="tb-form-control debts-in hm2_cl-input" value="">
-                                        </td>
-                                        <td>
-                                            <input type="text" class="tb-form-control debts-in hm2_cl-input" value="">
-                                        </td>
-                                        <td>
-                                            <select name="" class="tb-form-control debts-in hm2_cl-input" id="">
-                                                <option data-value="">--Select--</option>
-                                                <option data-value="Yes" selected>Yes</option>
-                                                <option data-value="No">No</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr class="debts-row">
-                                        <td>
-                                            <input type="text" class="tb-form-control debts-in hm2_cl-input" value="">
-                                        </td>
-                                        <td>
-                                            <input type="text" class="tb-form-control debts-in hm2_cl-input" value="">
-                                        </td>
-                                        <td>
-                                            <input type="text" class="tb-form-control debts-in hm2_cl-input" value="">
-                                        </td>
-                                        <td>
-                                            <select name="" class="tb-form-control debts-in hm2_cl-input" id="">
-                                                <option data-value="">--Select--</option>
-                                                <option data-value="Yes" selected>Yes</option>
-                                                <option data-value="No">No</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr class="debts-row">
-                                        <td>
-                                            <input type="text" class="tb-form-control debts-in hm2_cl-input" value="">
-                                        </td>
-                                        <td>
-                                            <input type="text" class="tb-form-control debts-in hm2_cl-input" value="">
-                                        </td>
-                                        <td>
-                                            <input type="text" class="tb-form-control debts-in hm2_cl-input" value="">
-                                        </td>
-                                        <td>
-                                            <select name="" class="tb-form-control debts-in hm2_cl-input" id="">
-                                                <option data-value="">--Select--</option>
-                                                <option data-value="Yes" selected>Yes</option>
-                                                <option data-value="No">No</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                    <!-- newly added this to the New Loan section (around line 370) ==================-->
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="hm2_in_11">Closing Costs</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                            </div>
+                            <input type="text" class="form-control hm2_cl-curr hm2_cl-input" id="hm2_in_11" value="5000">
                         </div>
-                        <button class="btn btn-primary" id="add_debts_btn" style="margin-top: 25px;">+ Add debt</button>
                     </div>
+                    <div class="col-md-4">
+                        <label for="hm2_in_12">Lender Credit</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                            </div>
+                            <input type="text" class="form-control hm2_cl-curr hm2_cl-input" id="hm2_in_12" value="0">
+                        </div>
+                    </div>
+                    <!-- <div class="col-md-4">
+                        <label for="hm2_in_13">Recoup Time</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="hm2_in_13" value="" readonly>
+                            <div class="input-group-append">
+                                <span class="input-group-text">months</span>
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+            <!-- newly addes =================================================================== -->
+
+                
                     <div class="col-md-12 middle-rs-sec">
                     <br>
                     <div class="row">
@@ -1063,6 +1023,97 @@
                             </div>
                         </div>
                     </div>
+
+                        <div class="col-md-12 all-debts-sec">
+                        <h3 class="all-debts-sec-title">All Debts</h3>
+                        <div style="overflow-x: auto;">
+                            <table class="table" style="min-width: 430px;">
+                                <thead>
+                                    <tr>
+                                        <th>Lender</th>
+                                        <th>Payment</th>
+                                        <th>Balance</th>
+                                        <th style="min-width: 85px;">Paid at close?</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="all_debts_sec">
+                                    <tr class="debts-row">
+                                        <td>
+                                            <input type="text" class="tb-form-control debts-in hm2_cl-input" value="">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="tb-form-control debts-in hm2_cl-input" value="">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="tb-form-control debts-in hm2_cl-input" value="">
+                                        </td>
+                                        <td>
+                                            <select name="" class="tb-form-control debts-in hm2_cl-input">
+                                                <option data-value="">--Select--</option>
+                                                <option data-value="Yes" selected>Yes</option>
+                                                <option data-value="No">No</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr class="debts-row">
+                                        <td>
+                                            <input type="text" class="tb-form-control debts-in hm2_cl-input" value="">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="tb-form-control debts-in hm2_cl-input" value="">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="tb-form-control debts-in hm2_cl-input" value="">
+                                        </td>
+                                        <td>
+                                            <select name="" class="tb-form-control debts-in hm2_cl-input" id="">
+                                                <option data-value="">--Select--</option>
+                                                <option data-value="Yes" selected>Yes</option>
+                                                <option data-value="No">No</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr class="debts-row">
+                                        <td>
+                                            <input type="text" class="tb-form-control debts-in hm2_cl-input" value="">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="tb-form-control debts-in hm2_cl-input" value="">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="tb-form-control debts-in hm2_cl-input" value="">
+                                        </td>
+                                        <td>
+                                            <select name="" class="tb-form-control debts-in hm2_cl-input" id="">
+                                                <option data-value="">--Select--</option>
+                                                <option data-value="Yes" selected>Yes</option>
+                                                <option data-value="No">No</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr class="debts-row">
+                                        <td>
+                                            <input type="text" class="tb-form-control debts-in hm2_cl-input" value="">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="tb-form-control debts-in hm2_cl-input" value="">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="tb-form-control debts-in hm2_cl-input" value="">
+                                        </td>
+                                        <td>
+                                            <select name="" class="tb-form-control debts-in hm2_cl-input" id="">
+                                                <option data-value="">--Select--</option>
+                                                <option data-value="Yes" selected>Yes</option>
+                                                <option data-value="No">No</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <button class="btn btn-primary" id="add_debts_btn" style="margin-top: 25px;">+ Add debt</button>
+                    </div>
                     <div class="col-md-12 debts-paid-sec">
                         <h3 class="debts-paid-sec-title"> Debts to Be Paid</h3>
                         <div style="overflow-x: auto;">
@@ -1098,6 +1149,16 @@
                                     </div>
                                 </div>
                             </div>
+                            <!-- new update to remove ==================================== -->
+                             <div class="col-md-3">
+                                <div class="rs-sec">
+                                    <div class="rs-sp-vl-sec text-center">
+                                        <h4 class="rs-sub-title-sp" style="color: #26459E;">Recoup Time</h4>
+                                        <h2 class="rs-sp-value" id="hm2_rs_recoup">0 months</h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end update ================================ -->
                             <div class="col-md-3">
                                 <div class="rs-sec">
                                     <div class="rs-sp-vl-sec text-center">
@@ -1129,7 +1190,7 @@
                             <div class="col-md-6">
                                 <div class="rs-sec">
                                     <div class="rs-sp-vl-sec text-center">
-                                        <h4 class="rs-sub-title-sp" style="color: #26459E;">Years Removed with Current Payment</h4>
+                                        <h4 class="rs-sub-title-sp" style="color: #26459E;">Loan Paid Off In: X Years (if you keep your current payment)—-no longer a $ value</h4>
                                         <h2 class="rs-sp-value" id="hm2_rs_9">$0.00</h2>
                                     </div>
                                 </div>
@@ -1145,7 +1206,8 @@
                         </div>
                     </div>
                     <div class="col-md-12"><br/></div>
-                    <div class="col-md-6">
+                    <!-- new update ======================================================= -->
+                    <!-- <div class="col-md-6">
                         <label for="">APR:</label>
                         <div class="input-group">
                             <input type="text" class="form-control hm2_cl-pr hm2_cl-input" id="in_apr" value="">
@@ -1153,7 +1215,23 @@
                                 <span class="input-group-text">%</span>
                             </div>
                         </div>
+                    </div> -->
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="in_apr" style="display:inline-block;">
+                                APR <small>(for PDF only)</small>
+                                <a href="#" class="toggle-apr" style="margin-left:5px;">[show]</a>
+                            </label>
+                            <div class="input-group apr-field" style="display:none;">
+                                <input type="text" class="form-control hm2_cl-pr hm2_cl-input" id="in_apr" value="">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">%</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                    <!-- end here ======================================================= -->
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="">&nbsp;</label>
@@ -1362,14 +1440,23 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th class="pdf-rs-title" style="width: 50%;">Years Removed with Current Payment</th>
+                        <th class="pdf-rs-title" style="width: 50%;">Loan Paid Off In: X Years (if you keep your current payment)—-no longer a $ value</th>
                         <!-- <th class="pdf-rs-title" style="width: 50%;">Cash Back at Closing</th> -->
+                         <th class="pdf-rs-title" style="width: 50%;">Recoup Time</th>
                     </tr>
+                    <!-- new update ======================================== -->
+                    <!-- Add this to the PDF section around where other savings are displayed -->
+                    <!-- <tr>
+                        <td class="pdf-rs-title">Recoup Time</td>
+                        <td class="pdf-rs-vl" id="pdf_rs_recoup">0 months</td>
+                    </tr> -->
+                    <!-- end update ============================ -->
                 </thead>
                 <tbody>
                     <tr>
                         <td class="pdf-rs-vl" id="pdf_rs_9">$0.00</td>
                         <!-- <td class="pdf-rs-vl" id="pdf_rs_10">$0.00</td> -->
+                           <td class="pdf-rs-vl" id="pdf_rs_recoup">0 months</td>
                     </tr>
                 </tbody>
             </table>
@@ -1654,6 +1741,12 @@ $('#addTab').on('click', function() {
         hm2_in_9 =  hm2_removeSign($("#hm2_in_9").val());
         hm2_in_10 =  hm2_removeSign($("#hm2_in_10").val());
 
+        //==============================================
+        //  these new update variables
+            hm2_in_11 = hm2_removeSign($("#hm2_in_11").val());
+            hm2_in_12 = hm2_removeSign($("#hm2_in_12").val());
+        //==============================================
+
         let debt_rows = "";
         let debt_total = 0;
         let debt_balance  = 0;
@@ -1706,6 +1799,15 @@ $('#addTab').on('click', function() {
         let total_new_payment = nper(hm2_in_3/12, (-1*new_paymnt), hm2_in_1);
         let year_remove_curr_payment = total_new_payment / 12;
 
+        // new updated ===============================================
+        // Add recoup time calculation
+        let recoupMonths = 0;
+        if (total_savings > 0) {
+            recoupMonths = (hm2_in_11 - hm2_in_12) / total_savings;
+        }
+        recoupMonths = Math.round(recoupMonths * 100) / 100; // Round to 2 decimals
+        // =================================================
+
         // Store outputs in current scenario
         scenario.outputs = {
             currentPayment: current_paymenent,
@@ -1716,7 +1818,10 @@ $('#addTab').on('click', function() {
             yearlySavings: yearly_savings,
             fiveYearSavings: five_year_savings,
             lifeSavings: life_loan_savings,
-            yearsRemoved: year_remove_curr_payment
+            yearsRemoved: year_remove_curr_payment,
+            // new update =======================================
+            recoupMonths: recoupMonths
+            //=======================================
         };
 
         // Update UI
@@ -1747,6 +1852,18 @@ $('#addTab').on('click', function() {
         $("#nl_rs_14").text(hm2_nftd.format(hm2_in_6 * 100) + "%");
         $("#nl_rs_15").text("$" + hm2_nftd.format(current_total_payment));
         $("#nl_rs_16").text("$" + hm2_nftd.format(proposed_total_payment));
+
+        // new update =========================================
+       // Update UI with recoup time
+      //  $("#hm2_rs_recoup").val(recoupMonths);
+         $("#hm2_rs_recoup").text(recoupMonths + " months");
+        $("#pdf_rs_recoup").text(recoupMonths + " months");
+        
+        // Change "Years Removed" label and calculation
+        $("#hm2_rs_9, #pdf_rs_9").text(hm2_nft.format(year_remove_curr_payment) + " Years");
+        $(".rs-sub-title-sp:contains('Years Removed')").text("Loan Paid Off In:");
+
+        //=========================================
 
         let table1 = $("#debts_loan_tb").html();
         let table2 = $("#debts_paid_tb").html();
@@ -1833,6 +1950,20 @@ $('#addTab').on('click', function() {
             $('#btn_download').text("Download");
         }, 500);
     });
+    
+
+    /*  new add ===================================== */
+
+        $(".toggle-apr").on("click", function(e) {
+            e.preventDefault();
+            $(this).text(function(i, text) {
+                return text === "[show]" ? "[hide]" : "[show]";
+            });
+            $(".apr-field").toggle();
+        });
+
+
+   /* ====================================== */
 
     /*
     function genPDF(){

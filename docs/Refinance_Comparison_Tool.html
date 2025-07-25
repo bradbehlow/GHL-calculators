@@ -747,6 +747,24 @@
 #hm2_cl .toggle-apr:hover {
     text-decoration: underline;
 }
+
+/* Add tooltip styling */
+#hm2_cl .rs-sub-title-sp[title] {
+    cursor: help;
+    border-bottom: 1px dotted #6BC14B;
+}
+
+/* Ensure consistent spacing */
+#hm2_cl .foorter-rs-sec {
+    margin: 20px 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    #hm2_cl .rs-sec {
+        margin-bottom: 15px;
+    }
+}
  
 </style>
 <div id="hm2_cl">
@@ -1158,6 +1176,7 @@
                                     </div>
                                 </div>
                             </div>
+                        
                             <!-- end update ================================ -->
                             <div class="col-md-3">
                                 <div class="rs-sec">
@@ -1183,18 +1202,28 @@
                                     </div>
                                 </div>
                             </div>
+                            
                         </div>
                     </div>
                     <div class="col-md-12 foorter-rs-sec-1">
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="rs-sec">
-                                    <div class="rs-sp-vl-sec text-center">
-                                        <h4 class="rs-sub-title-sp" style="color: #26459E;">Loan Paid Off In: X Years (if you keep your current payment)—-no longer a $ value</h4>
-                                        <h2 class="rs-sp-value" id="hm2_rs_9">$0.00</h2>
-                                    </div>
+                            <div class="rs-sec">
+                                <div class="rs-sp-vl-sec text-center">
+                                    <h4 class="rs-sub-title-sp" style="color: #26459E;" title="Based on your current payment schedule">Loan Paid Off In</h4>
+                                    <h2 class="rs-sp-value" id="hm2_rs_9">0 Years</h2>
                                 </div>
                             </div>
+                            </div>
+                            <div class="col-md-6">
+                            <div class="rs-sec">
+                                <div class="rs-sp-vl-sec text-center">
+                                    <h4 class="rs-sub-title-sp" style="color: #26459E;">Life of Loan Interest Savings</h4>
+                                    <h2 class="rs-sp-value" id="hm2_rs_interest_savings">$0</h2>
+                                </div>
+                            </div>
+                        </div>
+                                
                             <!-- <div class="col-md-6">
                                 <div class="rs-sec">
                                     <div class="rs-sp-vl-sec text-center">
@@ -1217,13 +1246,27 @@
                         </div>
                     </div> -->
 
-                    <div class="col-md-6">
+                    <!-- <div class="col-md-6">
                         <div class="form-group">
                             <label for="in_apr" style="display:inline-block;">
                                 APR <small>(for PDF only)</small>
                                 <a href="#" class="toggle-apr" style="margin-left:5px;">[show]</a>
                             </label>
                             <div class="input-group apr-field" style="display:none;">
+                                <input type="text" class="form-control hm2_cl-pr hm2_cl-input" id="in_apr" value="">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                    <!-- Replace the toggle version with this: -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="in_apr">
+                                APR <small>(For PDF only)</small>
+                            </label>
+                            <div class="input-group">
                                 <input type="text" class="form-control hm2_cl-pr hm2_cl-input" id="in_apr" value="">
                                 <div class="input-group-append">
                                     <span class="input-group-text">%</span>
@@ -1443,6 +1486,7 @@
                         <th class="pdf-rs-title" style="width: 50%;">Loan Paid Off In: X Years (if you keep your current payment)—-no longer a $ value</th>
                         <!-- <th class="pdf-rs-title" style="width: 50%;">Cash Back at Closing</th> -->
                          <th class="pdf-rs-title" style="width: 50%;">Recoup Time</th>
+                          <th class="pdf-rs-title">Life of Loan Interest Savings</th>
                     </tr>
                     <!-- new update ======================================== -->
                     <!-- Add this to the PDF section around where other savings are displayed -->
@@ -1457,6 +1501,7 @@
                         <td class="pdf-rs-vl" id="pdf_rs_9">$0.00</td>
                         <!-- <td class="pdf-rs-vl" id="pdf_rs_10">$0.00</td> -->
                            <td class="pdf-rs-vl" id="pdf_rs_recoup">0 months</td>
+                            <td class="pdf-rs-vl" id="pdf_rs_interest_savings">$0</td>
                     </tr>
                 </tbody>
             </table>
@@ -1806,6 +1851,14 @@ $('#addTab').on('click', function() {
             recoupMonths = (hm2_in_11 - hm2_in_12) / total_savings;
         }
         recoupMonths = Math.round(recoupMonths * 100) / 100; // Round to 2 decimals
+
+        //
+
+        // Add these calculations:
+        const remainingPayments = hm2_in_2 * 12; // Original term in months
+        const currentTotalInterest = (current_pi * remainingPayments) - hm2_in_1;
+        const refiTotalInterest = (propose_mortgage_bl * hm2_in_5 * 12) - hm2_in_4;
+        const lifeInterestSavings = currentTotalInterest - refiTotalInterest;
         // =================================================
 
         // Store outputs in current scenario
@@ -1820,7 +1873,8 @@ $('#addTab').on('click', function() {
             lifeSavings: life_loan_savings,
             yearsRemoved: year_remove_curr_payment,
             // new update =======================================
-            recoupMonths: recoupMonths
+            recoupMonths: recoupMonths,
+            lifeInterestSavings: lifeInterestSavings
             //=======================================
         };
 
@@ -1834,7 +1888,14 @@ $('#addTab').on('click', function() {
         $("#hm2_rs_6, #pdf_rs_6").text("$" + hm2_nftd.format(yearly_savings));
         $("#hm2_rs_7, #pdf_rs_7").text("$" + hm2_nftd.format(five_year_savings));
         $("#hm2_rs_8, #pdf_rs_8").text("$" + hm2_nftd.format(life_loan_savings));
-        $("#hm2_rs_9, #pdf_rs_9").text(hm2_nft.format(year_remove_curr_payment));
+
+        //===============================================================================
+        $("#hm2_rs_9, #pdf_rs_9").text(hm2_nftd.format(year_remove_curr_payment) + " Years");
+       // $("#hm2_rs_9, #pdf_rs_9").text(hm2_nft.format(year_remove_curr_payment));
+       // Update UI
+        $("#hm2_rs_interest_savings, #pdf_rs_interest_savings").text("$" + hm2_nft.format(lifeInterestSavings));
+
+       //================================================================================
 
         $("#nl_rs_1").text("$" + hm2_nftd.format(all_balance_total));
         $("#nl_rs_2").text("$" + hm2_nftd.format(no_total));

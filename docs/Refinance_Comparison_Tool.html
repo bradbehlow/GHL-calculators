@@ -765,6 +765,44 @@
         margin-bottom: 15px;
     }
 }
+/* newlyt added 29 july */
+
+#hm2_cl .tooltip-icon {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background-color: #6BC14B;
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 12px;
+    line-height: 16px;
+    margin-left: 5px;
+    cursor: help;
+    position: relative;
+}
+
+#hm2_cl .tooltip-text {
+    visibility: hidden;
+    width: 200px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+#hm2_cl .tooltip-icon:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
  
 </style>
 <div id="hm2_cl">
@@ -1202,43 +1240,39 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                             <div class="col-md-3">
                                 <div class="rs-sec">
                                     <div class="rs-sp-vl-sec text-center">
-                                        <h4 class="rs-sub-title-sp" style="color: #26459E;" title="Based on your current payment schedule">Loan Paid Off In</h4>
+                                        <h4 class="rs-sub-title-sp" style="color: #26459E;">
+                                            Loan Paid Off In
+                                            <span class="tooltip-icon">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                        <line x1="12" y1="17" x2="12" y2="17"></line>
+                                    </svg>
+                                    <span class="tooltip-text">Based on your current payment schedule</span>
+                                </span>
+                                        </h4>
                                         <h2 class="rs-sp-value" id="hm2_rs_9">0 Years</h2>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                            <div class="rs-sec">
-                                <div class="rs-sp-vl-sec text-center">
-                                    <h4 class="rs-sub-title-sp" style="color: #26459E;">Life of Loan Interest Savings</h4>
-                                    <h2 class="rs-sp-value" id="hm2_rs_interest_savings">$0</h2>
+                             <div class="col-md-6">
+                                <div class="rs-sec">
+                                    <div class="rs-sp-vl-sec text-center">
+                                        <h4 class="rs-sub-title-sp" style="color: #26459E;">Life of Loan Interest Savings</h4>
+                                        <h2 class="rs-sp-value" id="hm2_rs_interest_savings">$0</h2>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                             
                         </div>
                     </div>
                     <div class="col-md-12 foorter-rs-sec-1">
                         <div class="row">
-                            <!-- <div class="col-md-6">
-                            <div class="rs-sec">
-                                <div class="rs-sp-vl-sec text-center">
-                                    <h4 class="rs-sub-title-sp" style="color: #26459E;" title="Based on your current payment schedule">Loan Paid Off In</h4>
-                                    <h2 class="rs-sp-value" id="hm2_rs_9">0 Years</h2>
-                                </div>
-                            </div>
-                            </div>
-                            <div class="col-md-6">
-                            <div class="rs-sec">
-                                <div class="rs-sp-vl-sec text-center">
-                                    <h4 class="rs-sub-title-sp" style="color: #26459E;">Life of Loan Interest Savings</h4>
-                                    <h2 class="rs-sp-value" id="hm2_rs_interest_savings">$0</h2>
-                                </div>
-                            </div>
-                        </div> -->
+                          
+                           
                                 
                             <!-- <div class="col-md-6">
                                 <div class="rs-sec">

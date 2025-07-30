@@ -532,14 +532,15 @@
 
 /* When generating PDF, we'll override these styles temporarily */
 .html2pdf-container #pdf_section {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: "arial";
+    font-weight: 500; /* Regular for body text */
     display: block !important;
     position: static !important;
     left: auto !important;
 }
 #pdf_data {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-weight: 400; /* Regular for body text */
+    font-family: "arial";
+    font-weight: 550; /* Regular for body text */
     color: #080337;
     line-height: 1.6;
     padding: 20px;
@@ -548,8 +549,7 @@
 }
 
 /* Main Title */
-#pdf_data .pdf-main-title {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+#pdf_data .pdf-main-title {    
     font-size: 26px;
     color: #6bc14b;
     text-align: center;
@@ -594,13 +594,14 @@
 
 /* Value Cells */
 #pdf_data .value-cell {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: "arial";
     font-weight: 500;
     color: #000;
 }
 
 /* Highlight Values */
 #pdf_data .highlight-value {
+    font-family: "arial";
     color: #6BC14B;
     font-weight: 600;
     font-size: 16px;
@@ -1383,7 +1384,8 @@
         </p> -->
          <div style="text-align: center; margin-top: 20px; margin-bottom: 30px;">
     <h1 class="pdf-main-title"
-     style="        
+     style="
+        font-family: cursive;        
         font-size: 28px;
         color: #2c3e50;
         letter-spacing: 1px;
@@ -1424,10 +1426,10 @@
                         <td class="highlight-value" id="pdf_in_5">0</td>
                     </tr>
                     <tr>
-                        <td>Current Rate</td>
+                        <td class="value-cell">Current Rate</td>
                         <td class="highlight-value" id="pdf_in_3">0.000%</td>
                         <td></td>
-                        <td>New Rate</td>
+                        <td class="value-cell">New Rate</td>
                         <td class="highlight-value" id="pdf_in_6">0.000%</td>
                     </tr>
                 </tbody>
@@ -1517,15 +1519,16 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th class="pdf-rs-title">Monthly Savings</th>
-                        <th class="pdf-rs-title">Yearly Savings</th>
-                        <th class="pdf-rs-title">5 Year Savings</th>
-                        <th class="pdf-rs-title">Life of Loan Savings</th>
+                        <th style="width: 20%;" class="pdf-rs-title">Monthly Savings</th>
+                        <th style="width: 20%;" class="pdf-rs-title">Yearly Savings</th>
+                        <th style="width: 20%;" class="pdf-rs-title">5 Year Savings</th>
+                        <th style="width: 20%;" class="pdf-rs-title">Life of Loan Savings</th>
+                       
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="pdf-rs-vl highlight-value" id="pdf_rs_5">$0.00</td>
+                        <td  class="pdf-rs-vl highlight-value" id="pdf_rs_5">$0.00</td>
                         <td class="pdf-rs-vl highlight-value" id="pdf_rs_6">$0.00</td>
                         <td class="pdf-rs-vl highlight-value" id="pdf_rs_7">$0.00</td>
                         <td class="pdf-rs-vl highlight-value" id="pdf_rs_8">$0.00</td>
@@ -1537,10 +1540,10 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th class="pdf-rs-title" style="width: 50%;">Loan Paid Off In</th>
+                        <th class="pdf-rs-title" style="width: 35%;">Loan Paid Off In</th>
                         <!-- <th class="pdf-rs-title" style="width: 50%;">Cash Back at Closing</th> -->
-                         <th class="pdf-rs-title" style="width: 50%;">Recoup Time</th>
-                          <th class="pdf-rs-title">Life of Loan Interest Savings</th>
+                         <th class="pdf-rs-title" style="width: 35%;">Recoup Time</th>
+                          <th class="pdf-rs-title" style="width: 35%;">Life of Loan Interest Savings</th>
                     </tr>
                     <!-- new update ======================================== -->
                     <!-- Add this to the PDF section around where other savings are displayed -->
@@ -1552,10 +1555,10 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="highlight-value" id="pdf_rs_9">$0.00</td>
+                        <td class="pdf-rs-vl highlight-value" id="pdf_rs_9">$0.00</td>
                         <!-- <td class="pdf-rs-vl" id="pdf_rs_10">$0.00</td> -->
-                           <td class="highlight-value" id="pdf_rs_recoup">0 months</td>
-                            <td class="highlight-value" id="pdf_rs_interest_savings">$0</td>
+                           <td class="pdf-rs-vl highlight-value" id="pdf_rs_recoup">0 months</td>
+                            <td class="pdf-rs-vl highlight-value" id="pdf_rs_interest_savings">$0</td>
                     </tr>
                 </tbody>
             </table>

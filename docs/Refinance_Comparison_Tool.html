@@ -522,9 +522,24 @@
         font-size: 13px;
     }
 }
+/* PDF Section ===================================================================================================== */
 /* PDF Section Styling - Matches Calculator Appearance */
+#pdf_section {
+    display: none; /* This keeps it hidden initially */
+    position: absolute;
+    left: -9999px; /* Moves it off-screen when not in use */
+}
+
+/* When generating PDF, we'll override these styles temporarily */
+.html2pdf-container #pdf_section {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    display: block !important;
+    position: static !important;
+    left: auto !important;
+}
 #pdf_data {
-    font-family: 'Roboto', sans-serif;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 400; /* Regular for body text */
     color: #080337;
     line-height: 1.6;
     padding: 20px;
@@ -534,6 +549,7 @@
 
 /* Main Title */
 #pdf_data .pdf-main-title {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 26px;
     color: #6bc14b;
     text-align: center;
@@ -578,6 +594,7 @@
 
 /* Value Cells */
 #pdf_data .value-cell {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 500;
     color: #000;
 }
@@ -623,6 +640,7 @@
     font-size: 16px;
     margin-top: 0;
 }
+/* ==== QR code promo section ===================================================================================== */
  .qr-promo-container {
         margin: 10px 0 20px 0;
         padding: 8px;
@@ -755,14 +773,14 @@
 
 #hm2_cl .tooltip-icon {
     display: inline-block;
-    width: 16px;
-    height: 16px;
-    background-color: #6BC14B;
+    width: 15px;
+    height: 15px;
+    background-color: #666565;
     color: white;
-    border-radius: 50%;
+    border-radius: 90%;
     text-align: center;
     font-size: 12px;
-    line-height: 16px;
+    line-height: 10px;
     margin-left: 5px;
     cursor: help;
     position: relative;
@@ -1365,8 +1383,7 @@
         </p> -->
          <div style="text-align: center; margin-top: 20px; margin-bottom: 30px;">
     <h1 class="pdf-main-title"
-     style="
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+     style="        
         font-size: 28px;
         color: #2c3e50;
         letter-spacing: 1px;

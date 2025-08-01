@@ -23,7 +23,7 @@
       }
 
       .container {
-        max-width: 1200px;
+        max-width: 1400px;
         margin: 0 auto;
         padding: 20px;
       }
@@ -258,10 +258,72 @@
           padding: 8px 4px;
         }
       }
+      .qr-promo-container {
+        position: absolute;
+        top: 20px;
+        padding: 8px;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        border-radius: 8px;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        width: auto;
+        z-index: 100;
+      }
+
+      .qr-promo-content {
+        text-align: center;
+        padding: 5px;
+      }
+
+      .qr-title {
+        font-size: 1rem;
+        color: #2c3e50;
+        margin: 5px 0;
+        font-weight: 600;
+      }
+
+      .qr-subtitle {
+        font-size: 0.8rem;
+        color: #7f8c8d;
+        margin-bottom: 8px;
+      }
+
+      .qr-image-container {
+        padding: 5px;
+        background: white;
+        border-radius: 5px;
+        display: inline-block;
+      }
+
+      .qr-image {
+        width: 100px;
+        height: 100px;
+        object-fit: contain;
+      }
+
+      /* Hide on mobile devices */
+      @media (max-width: 768px) {
+        .qr-promo-container {
+          display: none;
+        }
+      }
     </style>
   </head>
   <body>
     <div class="container">
+      <div class="qr-promo-container">
+        <div class="qr-promo-content">
+          <h2 class="qr-title">View on mobile</h2>
+          <!-- <p class="qr-subtitle">Scan the QR code below</p> -->
+          <div class="qr-image-container">
+            <img
+              src="https://res.cloudinary.com/dnfc9g33c/image/upload/v1754061798/Buydown_Calculator_1_mseoza.png"
+              alt="Scan QR Code"
+              class="qr-image"
+            />
+          </div>
+        </div>
+      </div>
+
       <div class="header">
         <h1>Temporary Buydown Calculator</h1>
         <p>

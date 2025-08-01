@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Temporary Buydown Calculator</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Montserrat", sans-serif;
+        background-color: white;
+        color: #333;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      .header h1 {
+        color: #000a37;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+      }
+
+      .header p {
+        color: #666;
+        font-size: 1.1rem;
+        max-width: 600px;
+        margin: 0 auto;
+        font-weight: 400;
+      }
+
+      .calculator-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        align-items: start;
+      }
+
+      .input-section {
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      .results-section {
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        position: sticky;
+        top: 20px;
+      }
+
+      .form-group {
+        margin-bottom: 25px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #000a37;
+        font-size: 0.95rem;
+      }
+
+      .form-group input,
+      .form-group select {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-family: "Montserrat", sans-serif;
+        transition: border-color 0.3s ease;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: #5a64db;
+      }
+
+      .reset-btn {
+        width: 100%;
+        padding: 12px;
+        background-color: #000a37;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        font-family: "Montserrat", sans-serif;
+      }
+
+      .reset-btn:hover {
+        background-color: #001a5c;
+      }
+
+      .monthly-payment {
+        text-align: center;
+        margin-bottom: 25px;
+      }
+
+      .payment-amount {
+        font-size: 3rem;
+        font-weight: 700;
+        color: #5a64db;
+        margin-bottom: 10px;
+      }
+
+      .payment-label {
+        font-size: 1.1rem;
+        color: #666;
+        font-weight: 500;
+      }
+
+      .description {
+        background-color: #f8f9ff;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 25px;
+        border-left: 4px solid #5a64db;
+      }
+
+      .description p {
+        color: #555;
+        font-size: 0.95rem;
+        line-height: 1.6;
+      }
+
+      .buydown-table {
+        margin-top: 25px;
+      }
+
+      .table-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #000a37;
+        margin-bottom: 15px;
+        text-align: center;
+      }
+
+      .table-container {
+        overflow-x: auto;
+        margin-bottom: 20px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.85rem;
+      }
+
+      th,
+      td {
+        padding: 10px 8px;
+        text-align: center;
+        border: 1px solid #e0e0e0;
+      }
+
+      th {
+        background-color: #000a37;
+        color: white;
+        font-weight: 600;
+      }
+
+      td {
+        background-color: #fafafa;
+      }
+
+      .summary-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      .summary-item:last-child {
+        border-bottom: none;
+      }
+
+      .summary-label {
+        font-weight: 600;
+        color: #000a37;
+      }
+
+      .summary-value {
+        font-weight: 700;
+        color: #5a64db;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 15px;
+        }
+
+        .header h1 {
+          font-size: 2rem;
+        }
+
+        .header p {
+          font-size: 1rem;
+        }
+
+        .calculator-grid {
+          grid-template-columns: 1fr;
+          gap: 25px;
+        }
+
+        .input-section,
+        .results-section {
+          padding: 20px;
+        }
+
+        .payment-amount {
+          font-size: 2.5rem;
+        }
+
+        .results-section {
+          position: static;
+        }
+
+        table {
+          font-size: 0.75rem;
+        }
+
+        th,
+        td {
+          padding: 8px 4px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Temporary Buydown Calculator</h1>
+        <p>
+          Calculate the cost and savings of temporary mortgage rate buydowns.
+          Compare different buydown options and see how they affect your monthly
+          payments during the initial years of your loan.
+        </p>
+      </div>
+
+      <div class="calculator-grid">
+        <div class="input-section">
+          <div class="form-group">
+            <label for="loanAmount">Loan Amount</label>
+            <input type="number" id="loanAmount" placeholder="$0" step="1000" />
+          </div>
+
+          <div class="form-group">
+            <label for="purchasePrice">Purchase Price</label>
+            <input
+              type="number"
+              id="purchasePrice"
+              placeholder="$0"
+              step="1000"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="loanPeriod">Loan Period (Years)</label>
+            <input
+              type="number"
+              id="loanPeriod"
+              placeholder="30"
+              min="1"
+              max="50"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="interestRate">Interest Rate (%)</label>
+            <input
+              type="number"
+              id="interestRate"
+              placeholder="0.000"
+              step="0.001"
+              min="0"
+              max="20"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="pmiRate">PMI Rate Factor (Annual % of Loan)</label>
+            <input
+              type="number"
+              id="pmiRate"
+              placeholder="0.000"
+              step="0.001"
+              min="0"
+              max="5"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="escrowAmount">Estimated Escrow Amount Annually</label>
+            <input
+              type="number"
+              id="escrowAmount"
+              placeholder="$0"
+              step="100"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="buydownType">Buydown Type</label>
+            <select id="buydownType">
+              <option value="">Select Buydown Type</option>
+              <option value="1-0">1-0 Buydown</option>
+              <option value="1-1">1-1 Buydown</option>
+              <option value="2-1">2-1 Buydown</option>
+              <option value="3-2-1">3-2-1 Buydown</option>
+              <option value="all">See All Options</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="buydownOption">Buydown Option</label>
+            <select id="buydownOption">
+              <option value="">Select Option</option>
+              <option value="seller">Seller Concessions</option>
+              <option value="llpa">LLPA</option>
+              <option value="both">See Both</option>
+            </select>
+          </div>
+
+          <button class="reset-btn" onclick="resetCalculator()">Reset</button>
+        </div>
+
+        <div class="results-section">
+          <div class="monthly-payment">
+            <div class="payment-amount" id="monthlyPayment">$0</div>
+            <div class="payment-label">Estimated Monthly Installment</div>
+          </div>
+
+          <div class="description">
+            <p>
+              A temporary buydown is a mortgage option that lowers a buyer's
+              interest rate for a set period of time. This can help buyers make
+              smaller monthly payments during the first few years of their loan.
+            </p>
+          </div>
+
+          <div id="buydownResults" class="hidden">
+            <div class="buydown-table">
+              <div class="table-title" id="tableTitle"></div>
+              <div class="table-container">
+                <table id="buydownTable">
+                  <thead>
+                    <tr>
+                      <th>Year</th>
+                      <th>Buydown Rate</th>
+                      <th>Note Rate Payment</th>
+                      <th>Buydown Payment</th>
+                      <th>Monthly Savings</th>
+                      <th>Number of Payments</th>
+                      <th>Annual Savings</th>
+                    </tr>
+                  </thead>
+                  <tbody id="buydownTableBody"></tbody>
+                </table>
+              </div>
+
+              <div id="summarySection">
+                <div class="summary-item">
+                  <span class="summary-label">Total Buydown Cost:</span>
+                  <span class="summary-value" id="totalCost">$0</span>
+                </div>
+                <div class="summary-item">
+                  <span class="summary-label"
+                    >Concession Required (Based on Purchase Price):</span
+                  >
+                  <span class="summary-value" id="concessionRequired"
+                    >0.000%</span
+                  >
+                </div>
+                <div class="summary-item hidden" id="llpaAdjustment">
+                  <span class="summary-label">LLPA Adjustment to Pricing:</span>
+                  <span class="summary-value" id="llpaValue">0.000%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function formatCurrency(amount) {
+        return new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "USD",
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        }).format(amount);
+      }
+
+      function formatPercent(rate, decimals = 3) {
+        return rate.toFixed(decimals) + "%";
+      }
+
+      function calculateMonthlyPayment(principal, rate, years) {
+        if (rate === 0) return principal / (years * 12);
+        const monthlyRate = rate / 100 / 12;
+        const numPayments = years * 12;
+        return (
+          (principal * (monthlyRate * Math.pow(1 + monthlyRate, numPayments))) /
+          (Math.pow(1 + monthlyRate, numPayments) - 1)
+        );
+      }
+
+      function getBuydownRates(type) {
+        const rates = {
+          "1-0": [1.0, 0],
+          "1-1": [1.0, 1.0],
+          "2-1": [2.0, 1.0],
+          "3-2-1": [3.0, 2.0, 1.0],
+        };
+        return rates[type] || [];
+      }
+
+      function getLLPARate(type) {
+        const rates = {
+          "1-0": 1.5,
+          "1-1": 1.5,
+          "2-1": 2.375,
+          "3-2-1": 4.5,
+        };
+        return rates[type] || 0;
+      }
+
+      function updateCalculations() {
+        const loanAmount =
+          parseFloat(document.getElementById("loanAmount").value) || 0;
+        const purchasePrice =
+          parseFloat(document.getElementById("purchasePrice").value) || 0;
+        const loanPeriod =
+          parseFloat(document.getElementById("loanPeriod").value) || 30;
+        const interestRate =
+          parseFloat(document.getElementById("interestRate").value) || 0;
+        const pmiRate =
+          parseFloat(document.getElementById("pmiRate").value) || 0;
+        const escrowAmount =
+          parseFloat(document.getElementById("escrowAmount").value) || 0;
+        const buydownType = document.getElementById("buydownType").value;
+        const buydownOption = document.getElementById("buydownOption").value;
+
+        // Calculate base monthly payment
+        let monthlyPayment = 0;
+        if (loanAmount > 0 && interestRate > 0) {
+          monthlyPayment = calculateMonthlyPayment(
+            loanAmount,
+            interestRate,
+            loanPeriod
+          );
+        }
+
+        // Add PMI
+        const monthlyPMI = (loanAmount * pmiRate) / 100 / 12;
+
+        // Add escrow
+        const monthlyEscrow = escrowAmount / 12;
+
+        // Total monthly payment
+        const totalMonthlyPayment = monthlyPayment + monthlyPMI + monthlyEscrow;
+
+        document.getElementById("monthlyPayment").textContent =
+          formatCurrency(totalMonthlyPayment);
+
+        // Handle buydown calculations
+        if (buydownType && buydownType !== "all" && buydownType !== "") {
+          updateBuydownTable(
+            loanAmount,
+            purchasePrice,
+            interestRate,
+            loanPeriod,
+            buydownType,
+            buydownOption,
+            monthlyPMI,
+            monthlyEscrow
+          );
+        } else {
+          document.getElementById("buydownResults").classList.add("hidden");
+        }
+      }
+
+      function updateBuydownTable(
+        loanAmount,
+        purchasePrice,
+        interestRate,
+        loanPeriod,
+        buydownType,
+        buydownOption,
+        monthlyPMI,
+        monthlyEscrow
+      ) {
+        // Handle "See All Options" case
+        if (buydownType === "all") {
+          displayAllBuydownOptions(
+            loanAmount,
+            purchasePrice,
+            interestRate,
+            loanPeriod,
+            buydownOption,
+            monthlyPMI,
+            monthlyEscrow
+          );
+          return;
+        }
+
+        const buydownRates = getBuydownRates(buydownType);
+        if (buydownRates.length === 0) {
+          document.getElementById("buydownResults").classList.add("hidden");
+          return;
+        }
+
+        // Always show the table when a valid buydown type is selected
+        document.getElementById("buydownResults").classList.remove("hidden");
+        document.getElementById("tableTitle").textContent =
+          buydownType.toUpperCase() + " BUY DOWN";
+
+        const tableBody = document.getElementById("buydownTableBody");
+        tableBody.innerHTML = "";
+
+        // Calculate the note rate payment (full interest rate payment) - only P&I portion
+        const noteRatePrincipalInterest =
+          loanAmount > 0 && interestRate > 0
+            ? calculateMonthlyPayment(loanAmount, interestRate, loanPeriod)
+            : 0;
+        const noteRatePayment =
+          noteRatePrincipalInterest + monthlyPMI + monthlyEscrow;
+
+        let totalBuydownCost = 0;
+
+        buydownRates.forEach((reduction, index) => {
+          const year = index + 1;
+          const buydownRate = Math.max(0, interestRate - reduction);
+
+          // Calculate buydown payment (reduced rate payment) - only P&I portion
+          const buydownPrincipalInterest =
+            loanAmount > 0
+              ? calculateMonthlyPayment(loanAmount, buydownRate, loanPeriod)
+              : 0;
+          const buydownPayment =
+            buydownPrincipalInterest + monthlyPMI + monthlyEscrow;
+
+          const monthlySavings = noteRatePayment - buydownPayment;
+          const annualSavings = monthlySavings * 12;
+          totalBuydownCost += annualSavings;
+
+          const row = tableBody.insertRow();
+          row.innerHTML = `
+                    <td>${year}</td>
+                    <td>${formatPercent(buydownRate)}</td>
+                    <td>${formatCurrency(noteRatePayment)}</td>
+                    <td>${formatCurrency(buydownPayment)}</td>
+                    <td>${formatCurrency(monthlySavings)}</td>
+                    <td>12</td>
+                    <td>${formatCurrency(annualSavings)}</td>
+                `;
+        });
+
+        // Update summary
+        document.getElementById("totalCost").textContent =
+          formatCurrency(totalBuydownCost);
+
+        const concessionPercent =
+          purchasePrice > 0 ? (totalBuydownCost / purchasePrice) * 100 : 0;
+        document.getElementById("concessionRequired").textContent =
+          formatPercent(concessionPercent);
+
+        // Handle LLPA display
+        const llpaElement = document.getElementById("llpaAdjustment");
+        if (buydownOption === "llpa" || buydownOption === "both") {
+          const llpaRate = getLLPARate(buydownType);
+          const llpaAmount = (loanAmount * llpaRate) / 100;
+          document.getElementById("llpaValue").textContent =
+            formatPercent(llpaRate) + " (" + formatCurrency(llpaAmount) + ")";
+          llpaElement.classList.remove("hidden");
+        } else {
+          llpaElement.classList.add("hidden");
+        }
+      }
+
+      function displayAllBuydownOptions(
+        loanAmount,
+        purchasePrice,
+        interestRate,
+        loanPeriod,
+        buydownOption,
+        monthlyPMI,
+        monthlyEscrow
+      ) {
+        document.getElementById("buydownResults").classList.remove("hidden");
+        document.getElementById("tableTitle").textContent =
+          "ALL BUYDOWN OPTIONS COMPARISON";
+
+        const tableBody = document.getElementById("buydownTableBody");
+        tableBody.innerHTML = "";
+
+        // Calculate the note rate payment (full interest rate payment)
+        const noteRatePrincipalInterest =
+          loanAmount > 0 && interestRate > 0
+            ? calculateMonthlyPayment(loanAmount, interestRate, loanPeriod)
+            : 0;
+        const noteRatePayment =
+          noteRatePrincipalInterest + monthlyPMI + monthlyEscrow;
+
+        const allBuydownTypes = ["1-0", "1-1", "2-1", "3-2-1"];
+        let grandTotalCost = 0;
+
+        allBuydownTypes.forEach((type) => {
+          const buydownRates = getBuydownRates(type);
+          let typeTotalCost = 0;
+
+          // Add a header row for each buydown type
+          const headerRow = tableBody.insertRow();
+          headerRow.innerHTML = `<td colspan="7" style="background-color: #5A64DB; color: white; font-weight: bold; text-align: center;">${type.toUpperCase()} BUYDOWN</td>`;
+
+          buydownRates.forEach((reduction, index) => {
+            const year = index + 1;
+            const buydownRate = Math.max(0, interestRate - reduction);
+
+            const buydownPrincipalInterest =
+              loanAmount > 0
+                ? calculateMonthlyPayment(loanAmount, buydownRate, loanPeriod)
+                : 0;
+            const buydownPayment =
+              buydownPrincipalInterest + monthlyPMI + monthlyEscrow;
+
+            const monthlySavings = noteRatePayment - buydownPayment;
+            const annualSavings = monthlySavings * 12;
+            typeTotalCost += annualSavings;
+
+            const row = tableBody.insertRow();
+            row.innerHTML = `
+                        <td>${year}</td>
+                        <td>${formatPercent(buydownRate)}</td>
+                        <td>${formatCurrency(noteRatePayment)}</td>
+                        <td>${formatCurrency(buydownPayment)}</td>
+                        <td>${formatCurrency(monthlySavings)}</td>
+                        <td>12</td>
+                        <td>${formatCurrency(annualSavings)}</td>
+                    `;
+          });
+
+          // Add total row for this buydown type
+          const totalRow = tableBody.insertRow();
+          totalRow.innerHTML = `<td colspan="6" style="background-color: #f0f0f0; font-weight: bold; text-align: right;">Total ${type.toUpperCase()} Cost:</td><td style="background-color: #f0f0f0; font-weight: bold;">${formatCurrency(
+            typeTotalCost
+          )}</td>`;
+
+          grandTotalCost += typeTotalCost;
+        });
+
+        // Update summary with combined totals
+        document.getElementById("totalCost").textContent =
+          "See table for individual costs";
+        document.getElementById("concessionRequired").textContent =
+          "Varies by option";
+        document.getElementById("llpaAdjustment").classList.add("hidden");
+      }
+
+      function resetCalculator() {
+        document.getElementById("loanAmount").value = "";
+        document.getElementById("purchasePrice").value = "";
+        document.getElementById("loanPeriod").value = "";
+        document.getElementById("interestRate").value = "";
+        document.getElementById("pmiRate").value = "";
+        document.getElementById("escrowAmount").value = "";
+        document.getElementById("buydownType").value = "";
+        document.getElementById("buydownOption").value = "";
+
+        document.getElementById("monthlyPayment").textContent = "$0";
+        document.getElementById("buydownResults").classList.add("hidden");
+      }
+
+      // Add event listeners for real-time updates
+      document.addEventListener("DOMContentLoaded", function () {
+        const inputs = [
+          "loanAmount",
+          "purchasePrice",
+          "loanPeriod",
+          "interestRate",
+          "pmiRate",
+          "escrowAmount",
+          "buydownType",
+          "buydownOption",
+        ];
+
+        inputs.forEach((id) => {
+          const element = document.getElementById(id);
+          element.addEventListener("input", updateCalculations);
+          element.addEventListener("change", updateCalculations);
+        });
+      });
+    </script>
+    <script>
+      (function () {
+        function c() {
+          var b = a.contentDocument || a.contentWindow.document;
+          if (b) {
+            var d = b.createElement("script");
+            d.innerHTML =
+              "window.__CF$cv$params={r:'96803edcd19041bf',t:'MTc1Mzk5NzkzNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
+            b.getElementsByTagName("head")[0].appendChild(d);
+          }
+        }
+        if (document.body) {
+          var a = document.createElement("iframe");
+          a.height = 1;
+          a.width = 1;
+          a.style.position = "absolute";
+          a.style.top = 0;
+          a.style.left = 0;
+          a.style.border = "none";
+          a.style.visibility = "hidden";
+          document.body.appendChild(a);
+          if ("loading" !== document.readyState) c();
+          else if (window.addEventListener)
+            document.addEventListener("DOMContentLoaded", c);
+          else {
+            var e = document.onreadystatechange || function () {};
+            document.onreadystatechange = function (b) {
+              e(b);
+              "loading" !== document.readyState &&
+                ((document.onreadystatechange = e), c());
+            };
+          }
+        }
+      })();
+      function updateCalculations() {
+        const loanAmount =
+          parseFloat(document.getElementById("loanAmount").value) || 0;
+        const purchasePrice =
+          parseFloat(document.getElementById("purchasePrice").value) || 0;
+        const loanPeriod =
+          parseFloat(document.getElementById("loanPeriod").value) || 30;
+        const interestRate =
+          parseFloat(document.getElementById("interestRate").value) || 0;
+        const pmiRate =
+          parseFloat(document.getElementById("pmiRate").value) || 0;
+        const escrowAmount =
+          parseFloat(document.getElementById("escrowAmount").value) || 0;
+        const buydownType = document.getElementById("buydownType").value;
+        const buydownOption = document.getElementById("buydownOption").value;
+
+        // Calculate base monthly payment
+        let monthlyPayment = 0;
+        if (loanAmount > 0 && interestRate > 0) {
+          monthlyPayment = calculateMonthlyPayment(
+            loanAmount,
+            interestRate,
+            loanPeriod
+          );
+        }
+
+        // Add PMI
+        const monthlyPMI = (loanAmount * pmiRate) / 100 / 12;
+
+        // Add escrow
+        const monthlyEscrow = escrowAmount / 12;
+
+        // Total monthly payment
+        const totalMonthlyPayment = monthlyPayment + monthlyPMI + monthlyEscrow;
+
+        document.getElementById("monthlyPayment").textContent =
+          formatCurrency(totalMonthlyPayment);
+
+        // Always show the table (removed the conditional hiding)
+        document.getElementById("buydownResults").classList.remove("hidden");
+
+        // Handle buydown calculations
+        if (buydownType && buydownOption) {
+          updateBuydownTable(
+            loanAmount,
+            purchasePrice,
+            interestRate,
+            loanPeriod,
+            buydownType,
+            buydownOption,
+            monthlyPMI,
+            monthlyEscrow
+          );
+        } else {
+          // Show empty state or instructions
+          document.getElementById("tableTitle").textContent =
+            "Select Buydown Options";
+          document.getElementById(
+            "buydownTableBody"
+          ).innerHTML = `<tr><td colspan="7" style="text-align: center;">Please select a buydown type and option to see calculations</td></tr>`;
+        }
+      }
+
+      // [Rest of the existing JavaScript remains the same]
+
+      // Initialize with default values and show table
+      document.addEventListener("DOMContentLoaded", function () {
+        // Set default values
+        document.getElementById("loanAmount").value = "300000";
+        document.getElementById("purchasePrice").value = "400000";
+        document.getElementById("loanPeriod").value = "30";
+        document.getElementById("interestRate").value = "6.5";
+        document.getElementById("pmiRate").value = "1";
+
+        // Remove hidden class from results
+        document.getElementById("buydownResults").classList.remove("hidden");
+
+        // Run initial calculations
+        updateCalculations();
+
+        // Set up event listeners
+        const inputs = [
+          "loanAmount",
+          "purchasePrice",
+          "loanPeriod",
+          "interestRate",
+          "pmiRate",
+          "escrowAmount",
+          "buydownType",
+          "buydownOption",
+        ];
+
+        inputs.forEach((id) => {
+          const element = document.getElementById(id);
+          element.addEventListener("input", updateCalculations);
+          element.addEventListener("change", updateCalculations);
+        });
+      });
+    </script>
+  </body>
+</html>

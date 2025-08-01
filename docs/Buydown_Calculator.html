@@ -727,14 +727,14 @@
 
             const row = tableBody.insertRow();
             row.innerHTML = `
-                        <td>${year}</td>
-                        <td>${formatPercent(buydownRate)}</td>
-                        <td>${formatCurrency(noteRatePayment)}</td>
-                        <td>${formatCurrency(buydownPayment)}</td>
-                        <td>${formatCurrency(monthlySavings)}</td>
-                        <td>12</td>
-                        <td>${formatCurrency(annualSavings)}</td>
-                    `;
+          <td>${year}</td>
+          <td>${formatPercent(buydownRate)}</td>
+          <td>${formatCurrency(noteRatePayment)}</td>
+          <td>${formatCurrency(buydownPayment)}</td>
+          <td>${formatCurrency(monthlySavings)}</td>
+          <td>12</td>
+          <td>${formatCurrency(annualSavings)}</td>
+        `;
           });
 
           // Add total row for this buydown type
@@ -746,14 +746,39 @@
           grandTotalCost += typeTotalCost;
         });
 
-        // Update summary with combined totals
-        document.getElementById("totalCost").textContent =
-          "See table for individual costs";
-        document.getElementById("concessionRequired").textContent =
-          "Varies by option";
-        document.getElementById("llpaAdjustment").classList.add("hidden");
-      }
+        // Update summary based on selected option
+        const concessionPercent =
+          purchasePrice > 0 ? (grandTotalCost / purchasePrice) * 100 : 0;
 
+        if (buydownOption === "seller" || buydownOption === "both") {
+          document.getElementById("totalCost").textContent =
+            "See table for individual costs";
+          document.getElementById("concessionRequired").textContent =
+            "Varies by option (3-5% typical)";
+        } else {
+          document.getElementById("totalCost").textContent = "N/A";
+          document.getElementById("concessionRequired").textContent = "N/A";
+        }
+
+        // Handle LLPA display for "all" option
+        const llpaElement = document.getElementById("llpaAdjustment");
+        if (buydownOption === "llpa" || buydownOption === "both") {
+          let llpaContent = "";
+
+          allBuydownTypes.forEach((type) => {
+            const llpaRate = getLLPARate(type);
+            const llpaAmount = (loanAmount * llpaRate) / 100;
+            llpaContent += `${type.toUpperCase()}: ${formatPercent(
+              llpaRate
+            )} (${formatCurrency(llpaAmount)})<br>`;
+          });
+
+          document.getElementById("llpaValue").innerHTML = llpaContent;
+          llpaElement.classList.remove("hidden");
+        } else {
+          llpaElement.classList.add("hidden");
+        }
+      }
       function resetCalculator() {
         document.getElementById("loanAmount").value = "";
         document.getElementById("purchasePrice").value = "";

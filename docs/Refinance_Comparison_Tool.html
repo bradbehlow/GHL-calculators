@@ -532,14 +532,14 @@
 
 /* When generating PDF, we'll override these styles temporarily */
 .html2pdf-container #pdf_section {
-    font-family: "arial";
+    font-family: Helvetica;
     font-weight: 500; /* Regular for body text */
     display: block !important;
     position: static !important;
     left: auto !important;
 }
 #pdf_data {
-    font-family: "arial";
+    font-family: Helvetica;
     font-weight: 550; /* Regular for body text */
     color: #080337;
     line-height: 1.6;
@@ -574,7 +574,7 @@
     width: 100%;
     margin-bottom: 25px;
     border-collapse: collapse;
-    font-family: cursive;
+    font-family: Helvetica;
 }
 
 #pdf_data .table th {
@@ -585,7 +585,7 @@
     border-bottom: 2px solid #6BC14B;
     color: #26459E;
     background-color: #f8f9fa;
-    font-family: cursive;
+    font-family: Helvetica;
     
 }
 
@@ -593,19 +593,19 @@
     padding: 10px 9px;
     font-size: 15px;
     border-bottom: 1px solid #e9ecef;
-     font-family: cursive;
+     font-family: Helvetica;
 }
 
 /* Value Cells */
 #pdf_data .value-cell {
-    font-family: cursive;
+    font-family: Helvetica;
     font-weight: 500;
     color: #000;
 }
 
 /* Highlight Values */
 #pdf_data .highlight-value {
-    font-family: cursive;;
+    font-family: Helvetica;
     color: #6BC14B;
     font-weight: 600;
     font-size: 16px;
@@ -1389,14 +1389,14 @@
          <div style="text-align: center; margin-top: 0px; margin-bottom: 10px;">
     <h1 class="pdf-main-title"
      style="
-        font-family: cursive;        
+        font-family: 'Helvetica';        
         font-size: 28px;
         color: #2c3e50;
-        letter-spacing: 2px;
+        letter-spacing: 0px;
         font-weight: 700;
         border-bottom: 2px solid #2c3e50;
         display: inline-block;
-        padding-bottom: 9px;
+        padding-bottom: 7px;
         margin: 3;
     ">
         Refinance Comparison
@@ -1523,10 +1523,10 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th style="width: 25%;" class="pdf-rs-title">Monthly Savings</th>
-                        <th style="width: 25%;" class="pdf-rs-title">Yearly Savings</th>
-                        <th style="width: 25%;" class="pdf-rs-title">5 Year Savings</th>
-                        <th style="width: 25%;" class="pdf-rs-title">Life of Loan Savings</th>
+                        <th style="width: 24%;" class="pdf-rs-title">Monthly Savings</th>
+                        <th style="width: 24%;" class="pdf-rs-title">Yearly Savings</th>
+                        <th style="width: 24%;" class="pdf-rs-title">5 Year Savings</th>
+                        <th style="width: 30%;" class="pdf-rs-title">Life of Loan Savings</th>
                        
                     </tr>
                 </thead>
@@ -1544,10 +1544,10 @@
             <table class="table" style="margin-top: 70px; margin-bottom: 20px;">
                 <thead>
                     <tr>
-                        <th class="pdf-rs-title" style="width: 35%; ">Loan Paid Off In</th>
+                        <th class="pdf-rs-title" style="width: 31%; ">Loan Paid Off In</th>
                         <!-- <th class="pdf-rs-title" style="width: 50%;">Cash Back at Closing</th> -->
-                         <th class="pdf-rs-title" style="width: 35%;">Recoup Time</th>
-                          <th class="pdf-rs-title" style="width: 35%;">Life of Loan Interest Savings</th>
+                         <th class="pdf-rs-title" style="width: 31%;">Recoup Time</th>
+                          <th class="pdf-rs-title" style="width: 40%;">Life of Loan Interest Savings</th>
                     </tr>
                     <!-- new update ======================================== -->
                     <!-- Add this to the PDF section around where other savings are displayed -->

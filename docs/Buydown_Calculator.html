@@ -317,6 +317,16 @@
           display: none;
         }
       }
+      /* scroll disable buton new =================== */
+      input[type="number"]::-webkit-inner-spin-button,
+      input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      input[type="number"] {
+        -moz-appearance: textfield;
+      }
     </style>
   </head>
   <body>
@@ -822,6 +832,8 @@
           element.addEventListener("input", updateCalculations);
           element.addEventListener("change", updateCalculations);
         });
+        // Add this at the end of DOMContentLoaded
+        disableInputScroll();
       });
     </script>
     <script>
@@ -955,7 +967,25 @@
           element.addEventListener("input", updateCalculations);
           element.addEventListener("change", updateCalculations);
         });
+        // Add this at the end of DOMContentLoaded
+        disableInputScroll();
       });
+      // Add this function to disable wheel on number inputs
+      // NEW FUNCTION: Disable wheel scroll on number inputs
+      function disableInputScroll() {
+        const numberInputs = document.querySelectorAll('input[type="number"]');
+        numberInputs.forEach((input) => {
+          input.addEventListener(
+            "wheel",
+            function (e) {
+              if (document.activeElement === this) {
+                e.preventDefault();
+              }
+            },
+            { passive: false }
+          );
+        });
+      }
     </script>
   </body>
 </html>

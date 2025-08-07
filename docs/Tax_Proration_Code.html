@@ -230,6 +230,26 @@
 
           document.getElementById("result").innerHTML = `<p>${resultText}</p>`;
         });
+      //making it secureeee
+      // Disable right-click
+      document.addEventListener("contextmenu", function (e) {
+        e.preventDefault();
+      });
+
+      // Disable F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U, Ctrl+S, etc.
+      document.onkeydown = function (e) {
+        if (
+          e.key === "F12" ||
+          (e.ctrlKey &&
+            e.shiftKey &&
+            (e.key === "I" || e.key === "J" || e.key === "C")) ||
+          (e.ctrlKey && (e.key === "U" || e.key === "S"))
+        ) {
+          e.preventDefault();
+          return false;
+        }
+      };
+      // securing end
     </script>
   </body>
 </html>

@@ -327,6 +327,213 @@
       input[type="number"] {
         -moz-appearance: textfield;
       }
+
+      /* ============================================= */
+
+      /* Modal styles */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(4px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .modal-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .modal-container {
+        background: white;
+        border-radius: 16px;
+        width: 90%;
+        max-width: 900px;
+        max-height: 90vh;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        transform: scale(0.9) translateY(20px);
+        transition: all 0.3s ease;
+        overflow: hidden;
+      }
+
+      .modal-overlay.active .modal-container {
+        transform: scale(1) translateY(0);
+      }
+
+      .modal-header {
+        padding: 20px 24px;
+        border-bottom: 1px solid #e5e7eb;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #f9fafb;
+      }
+
+      .modal-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #374151;
+      }
+
+      .close-button {
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: #6b7280;
+        padding: 4px;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .close-button:hover {
+        background: #e5e7eb;
+        color: #374151;
+      }
+
+      .tab-navigation {
+        padding: 0 24px;
+        background: #f9fafb;
+        display: flex;
+        gap: 8px;
+        border-bottom: 1px solid #e5e7eb;
+      }
+
+      .tab-button {
+        background: none;
+        border: none;
+        padding: 12px 16px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        border-radius: 8px 8px 0 0;
+        transition: all 0.2s ease;
+        color: #6b7280;
+      }
+
+      .tab-button.active {
+        background: #3b82f6;
+        color: white;
+      }
+
+      .tab-button:not(.active):hover {
+        background: #e5e7eb;
+        color: #374151;
+      }
+
+      .modal-body {
+        padding: 24px;
+        max-height: 60vh;
+        overflow-y: auto;
+      }
+
+      .tab-content {
+        display: none;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      .code-container {
+        background: #1f2937;
+        border-radius: 8px;
+        padding: 30px;
+        margin-top: 12px;
+        position: relative;
+      }
+
+      .code-block {
+        color: #e5e7eb;
+        font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
+        font-size: 13px;
+        line-height: 1.6;
+        white-space: pre-wrap;
+        word-break: break-all;
+      }
+
+      .copy-button {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        background: #3b82f6;
+        color: white;
+        border: none;
+        padding: 8px 14px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .copy-button:hover {
+        background: #2563eb;
+      }
+
+      .copy-button.copied {
+        background: #059669;
+      }
+
+      .description {
+        color: #6b7280;
+        font-size: 14px;
+        margin-bottom: 16px;
+        line-height: 1.5;
+      }
+
+      @media (max-width: 768px) {
+        .modal-container {
+          width: 95%;
+          margin: 20px;
+        }
+
+        .modal-header,
+        .modal-body {
+          padding: 16px;
+        }
+
+        .tab-navigation {
+          padding: 0 16px;
+        }
+      }
+
+      /* Embed button styles */
+      .embed-button {
+        position: absolute;
+        top: 70px;
+        right: 50px;
+        background: linear-gradient(135deg, #adade2, #41335e);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+        z-index: 10;
+      }
+
+      .embed-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4);
+      }
     </style>
   </head>
   <body>
@@ -345,6 +552,65 @@
         </div>
       </div>
 
+      <!-- now the modal popup ===================================================-->
+      <!-- Embed Button -->
+      <button class="embed-button" id="embedButton">
+        <i class="fas fa-code mr-2"></i>Get Code
+      </button>
+
+      <!-- Modal -->
+      <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-container">
+          <div class="modal-header">
+            <h2 class="modal-title">Get Code</h2>
+            <button class="close-button" id="closeModalBtn">&times;</button>
+          </div>
+
+          <div class="tab-navigation">
+            <button class="tab-button active" data-tab="via-code">
+              Via Code
+            </button>
+            <!-- <button class="tab-button" data-tab="via-gtm">Via GTM</button> -->
+          </div>
+
+          <div class="modal-body">
+            <div class="tab-content active" id="via-code">
+              <p class="description">
+                Copy this code to embed the calculator on your website
+              </p>
+              <div class="code-container">
+                <button class="copy-button" id="copyBtn">Copy</button>
+                <pre class="code-block" id="codeBlock">
+                  &lt;iframe src="https://calculators.konnectd.io/Buydown_Calculator.html" width="100%" height="800" frameborder="0" style="border: none;"&gt;&lt;/iframe&gt;</pre
+                >
+              </div>
+            </div>
+
+            <div class="tab-content" id="via-gtm">
+              <p class="description">
+                Add this code through Google Tag Manager
+              </p>
+              <div class="code-container">
+                <button class="copy-button" id="copyBtnGTM">Copy</button>
+                <pre class="code-block" id="codeBlockGTM">
+                  &lt;script&gt;
+                  // Google Tag Manager code for embedding calculator
+                  (function() {
+                    var iframe = document.createElement('iframe');
+                    iframe.src = 'https://calculators.konnectd.io/Buydown_Calculator.html';
+                    iframe.width = '100%';
+                    iframe.height = '800';
+                    iframe.style.border = 'none';
+                    document.getElementById('calculator-container').appendChild(iframe);
+                  })();
+                  &lt;/script&gt;</pre
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- end modal popup =========================================================== -->
       <div class="header">
         <h1>Temporary Buydown Calculator</h1>
         <p>
@@ -937,6 +1203,108 @@
 
       // Initialize with default values and show table
       document.addEventListener("DOMContentLoaded", function () {
+        // Modal functionality ------------------------------------------------------------------------
+        //]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+
+        const modal = document.getElementById("modalOverlay");
+        const embedButton = document.getElementById("embedButton");
+        const closeButton = document.getElementById("closeModalBtn");
+        const tabButtons = document.querySelectorAll(".tab-button");
+        const tabContents = document.querySelectorAll(".tab-content");
+        const copyButtons = document.querySelectorAll(".copy-button");
+
+        // Open modal
+        embedButton.addEventListener("click", () => {
+          modal.classList.add("active");
+          document.body.style.overflow = "hidden";
+        });
+
+        // Close modal
+        closeButton.addEventListener("click", () => {
+          modal.classList.remove("active");
+          document.body.style.overflow = "";
+        });
+
+        // Close modal when clicking outside
+        modal.addEventListener("click", (e) => {
+          if (e.target === modal) {
+            modal.classList.remove("active");
+            document.body.style.overflow = "";
+          }
+        });
+
+        // Handle escape key
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape" && modal.classList.contains("active")) {
+            modal.classList.remove("active");
+            document.body.style.overflow = "";
+          }
+        });
+
+        // Tab functionality
+        tabButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            const tabId = button.dataset.tab;
+
+            // Remove active class from all tabs and contents
+            tabButtons.forEach((btn) => btn.classList.remove("active"));
+            tabContents.forEach((content) =>
+              content.classList.remove("active")
+            );
+
+            // Add active class to selected tab and content
+            button.classList.add("active");
+            document.getElementById(tabId).classList.add("active");
+          });
+        });
+
+        // Copy functionality
+        copyButtons.forEach((button) => {
+          button.addEventListener("click", (e) => {
+            const codeBlock = button.parentElement.querySelector(".code-block");
+            const text = codeBlock.textContent;
+
+            copyToClipboard(text, button);
+          });
+        });
+
+        // Copy to clipboard function
+        async function copyToClipboard(text, button) {
+          try {
+            await navigator.clipboard.writeText(text);
+
+            // Visual feedback
+            const originalText = button.textContent;
+            button.textContent = "Copied!";
+            button.classList.add("copied");
+
+            setTimeout(() => {
+              button.textContent = originalText;
+              button.classList.remove("copied");
+            }, 2000);
+          } catch (err) {
+            console.error("Failed to copy text: ", err);
+
+            // Fallback for older browsers
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand("copy");
+            document.body.removeChild(textArea);
+
+            button.textContent = "Copied!";
+            button.classList.add("copied");
+            setTimeout(() => {
+              button.textContent = "Copy";
+              button.classList.remove("copied");
+            }, 2000);
+          }
+        }
+
+        // end moda functionality =============================================================================
+
+        // ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
         // Set default values
         document.getElementById("loanAmount").value = "300000";
         document.getElementById("purchasePrice").value = "400000";

@@ -13,6 +13,7 @@
         align-items: center;
         height: 100vh;
         margin: 0;
+        position: relative; /* ADD THIS - Creates positioning context */
       }
 
       .container {
@@ -22,6 +23,8 @@
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         max-width: 400px;
         width: 100%;
+        position: relative; /* ADD THIS - Creates positioning context for child elements */
+        margin-top: auto;
       }
 
       h1 {
@@ -68,10 +71,11 @@
         border-radius: 4px;
         text-align: center;
       }
+      /* QR Code positioning - relative to body */
       .qr-promo-container {
         position: absolute;
         top: 20px;
-        left: 20px;
+        right: 500px;
         padding: 8px;
         background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
         border-radius: 8px;
@@ -150,7 +154,7 @@
 
       /* Modal styles */
       .modal-overlay {
-        position: absolute;
+        position: fixed;
         top: 0;
         left: 0;
         width: 100%;
@@ -174,9 +178,9 @@
       .modal-container {
         background: white;
         border-radius: 16px;
-        width: 80%;
+        width: 90%;
         max-width: 900px;
-        max-height: 100vh;
+        max-height: 90vh;
         box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
         transform: scale(0.9) translateY(20px);
         transition: all 0.3s ease;
@@ -234,7 +238,7 @@
       .tab-button {
         background: none;
         border: none;
-        padding: 12px 162px;
+        padding: 12px 16px;
         font-size: 14px;
         font-weight: 500;
         cursor: pointer;
@@ -246,6 +250,7 @@
       .tab-button.active {
         background: #3b82f6;
         color: white;
+        width: 20%;
       }
 
       .tab-button:not(.active):hover {
@@ -270,7 +275,7 @@
       .code-container {
         background: #1f2937;
         border-radius: 8px;
-        padding: 16px;
+        padding: 30px;
         margin-top: 12px;
         position: relative;
       }
@@ -288,10 +293,11 @@
         position: absolute;
         top: 12px;
         right: 12px;
+        width: 90px;
         background: #3b82f6;
         color: white;
         border: none;
-        padding: 8px 16px;
+        padding: 8px 14px;
         border-radius: 6px;
         font-size: 12px;
         font-weight: 500;
@@ -332,20 +338,38 @@
 
       /* Embed button styles */
       .embed-button {
-        position: right;
-        top: 20px;
-        left: 20px;
-        padding: 10px;
+        position: relative;
+        bottom: 0px;
+        left: 90px;
         background: linear-gradient(135deg, #adade2, #41335e);
+        color: white;
+        border: none;
+        padding: 10px 20px;
         border-radius: 8px;
-        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-        width: auto;
-        z-index: 100;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+        z-index: 10;
+        width: 50%;
       }
 
       .embed-button:hover {
         transform: translateY(-2px);
         box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4);
+      }
+      /* 📱 Mobile screens */
+      @media (max-width: 768px) {
+        .embed-button {
+          position: relative;
+          left: 43%; /* Center horizontally */
+          transform: translateX(-7%);
+          top: -10px; /* Adjust if needed */
+          font-size: 12px; /* Slightly smaller text */
+          padding: 10px 10px;
+          margin-bottom: 25px;
+        }
       }
     </style>
   </head>

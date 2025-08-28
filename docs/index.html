@@ -1,279 +1,333 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>All Calculators</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mortgage Calculators - Secure Access</title>
     <style>
-      /* Base styles */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
       body {
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
         background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-        margin: 0;
-        padding: 0;
         min-height: 100vh;
+        padding: 20px;
         display: flex;
         flex-direction: column;
-        justify-content: center;
         align-items: center;
-        color: #333;
       }
-
-      /* Glassmorphism container */
       .container {
-        background: rgba(255, 255, 255, 0.2);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border-radius: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
-        padding: 40px;
-        width: 80%;
-        max-width: 600px;
+        width: 100%;
+        max-width: 1000px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        margin-top: 20px;
+      }
+      header {
+        background: #2c3e50;
+        color: white;
+        padding: 20px;
         text-align: center;
-        transition: all 0.3s ease;
       }
-
-      .container:hover {
-        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.3);
-        transform: translateY(-5px);
-      }
-
       h1 {
-        color: #2c3e50;
-        font-size: 2.5rem;
-        margin-bottom: 30px;
-        position: relative;
-        display: inline-block;
+        font-size: 2.2rem;
+        margin-bottom: 10px;
       }
-
-      h1::after {
-        content: "";
-        position: absolute;
-        width: 60%;
-        height: 4px;
-        background: linear-gradient(90deg, #3498db, #9b59b6);
-        bottom: -10px;
-        left: 20%;
-        border-radius: 2px;
+      .subtitle {
+        font-size: 1.1rem;
+        opacity: 0.9;
       }
-
-      /* Calculator list styles */
-      ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        width: 100%;
+      .content {
+        padding: 30px;
       }
-
-      li {
-        margin: 15px 0;
-        position: relative;
-        overflow: hidden;
-        border-radius: 12px;
+      .auth-status {
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 25px;
+        text-align: center;
+        font-weight: 500;
+      }
+      .auth-success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+      .auth-error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+      .auth-loading {
+        background-color: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+      }
+      .calculator-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+      }
+      .calculator-card {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 25px;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
         transition: all 0.3s ease;
-      }
-
-      li:hover {
-        transform: scale(1.02);
-      }
-
-      a {
-        display: block;
+        cursor: pointer;
         text-decoration: none;
+        color: inherit;
+        border: 2px solid transparent;
+      }
+      .calculator-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        border-color: #3498db;
+        background: white;
+      }
+      .calculator-card h3 {
+        margin-bottom: 10px;
         color: #2c3e50;
-        font-weight: 600;
-        font-size: 1.1rem;
-        padding: 18px 25px;
-        background: rgba(255, 255, 255, 0.7);
-        border-radius: 12px;
-        transition: all 0.4s ease;
-        position: relative;
-        z-index: 1;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        overflow: hidden;
       }
-
-      a::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(
-          90deg,
-          transparent,
-          rgba(255, 255, 255, 0.4),
-          transparent
-        );
-        transition: all 0.6s ease;
-        z-index: -1;
-      }
-
-      a:hover {
-        color: #fff;
-        background: linear-gradient(135deg, #3498db, #9b59b6);
-        box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
-        transform: translateY(-2px);
-      }
-
-      a:hover::before {
-        left: 100%;
-      }
-
-      /* Animated background elements */
-      .bg-bubble {
-        position: fixed;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.1);
-        z-index: -1;
-      }
-
-      .bubble-1 {
-        width: 150px;
-        height: 150px;
-        top: 10%;
-        left: 5%;
-        animation: float 8s ease-in-out infinite;
-      }
-
-      .bubble-2 {
-        width: 200px;
-        height: 200px;
-        bottom: 15%;
-        right: 10%;
-        animation: float 10s ease-in-out infinite;
-      }
-
-      .bubble-3 {
-        width: 100px;
-        height: 100px;
-        top: 60%;
-        left: 20%;
-        animation: float 7s ease-in-out infinite reverse;
-      }
-
-      @keyframes float {
-        0%,
-        100% {
-          transform: translateY(0) rotate(0deg);
-        }
-        50% {
-          transform: translateY(-20px) rotate(5deg);
-        }
-      }
-
-      /* Responsive adjustments */
-      @media (max-width: 768px) {
-        .container {
-          width: 90%;
-          padding: 30px 20px;
-        }
-
-        h1 {
-          font-size: 2rem;
-        }
-
-        a {
-          padding: 15px 20px;
-          font-size: 1rem;
-        }
-      }
-      .disclaimer {
-        margin-top: 2rem;
-        padding: 1.5rem;
-        background-color: #f8f9fa;
-        border-left: 4px solid #6c757d;
-        border-radius: 0 4px 4px 0;
+      .calculator-card p {
+        color: #7f8c8d;
         font-size: 0.9rem;
-        line-height: 1.5;
       }
-
-      .disclaimer h3 {
-        margin-top: 0;
-        margin-bottom: 0.75rem;
-        color: #495057;
-        font-size: 1.1rem;
-        font-weight: 600;
+      .icon {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+        color: #3498db;
       }
-
-      .disclaimer p {
-        margin: 0;
-        color: #6c757d;
+      .url-info {
+        background: #f8f9fa;
+        border-left: 4px solid #3498db;
+        padding: 15px;
+        margin: 25px 0;
+        border-radius: 4px;
       }
-
+      .url-info code {
+        background: #e9ecef;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: monospace;
+      }
+      .loading-spinner {
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #3498db;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-right: 10px;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      footer {
+        text-align: center;
+        margin-top: 30px;
+        color: #7f8c8d;
+        font-size: 0.9rem;
+      }
       @media (max-width: 768px) {
-        .disclaimer {
-          padding: 1rem;
-          font-size: 0.85rem;
+        .calculator-grid {
+          grid-template-columns: 1fr;
+        }
+        h1 {
+          font-size: 1.8rem;
         }
       }
     </style>
   </head>
   <body>
-    <!-- Decorative background bubbles -->
-    <div class="bg-bubble bubble-1"></div>
-    <div class="bg-bubble bubble-2"></div>
-    <div class="bg-bubble bubble-3"></div>
-
-    <!-- Main content container -->
     <div class="container">
-      <h1>Choose a Calculator</h1>
-      <ul>
-        <li>
-          <a href="Cost_Of_Waiting_Calculator.html"
-            >Cost of Waiting Calculator</a
+      <header>
+        <h1>Mortgage Calculators</h1>
+        <p class="subtitle">Secure access with location authentication</p>
+      </header>
+
+      <div class="content">
+        <div id="auth-status" class="auth-status auth-loading">
+          <div class="loading-spinner"></div>
+          <span>Verifying your location ID...</span>
+        </div>
+
+        <div class="url-info">
+          <p>
+            This page validates your location ID passed through the URL. Example
+            valid URL format:
+          </p>
+          <p>
+            <code
+              >https://calculators.connected.io/index.html?location=hpYWXdHJSatXsaZrFlau</code
+            >
+          </p>
+        </div>
+
+        <div
+          id="calculators-section"
+          class="calculator-grid"
+          style="display: none"
+        >
+          <a
+            href="Buydown_Calculator.html"
+            class="calculator-card"
+            data-calculator="Buydown_Calculator"
           >
-        </li>
-        <li>
-          <a href="Internal_Income_Calculator.html"
-            >Internal Income Calculator</a
+            <div class="icon">💰</div>
+            <h3>Buydown Calculator</h3>
+            <p>Calculate mortgage buydown options and savings</p>
+          </a>
+
+          <a
+            href="Cost_Of_Waiting_Calculator.html"
+            class="calculator-card"
+            data-calculator="Cost_Of_Waiting_Calculator"
           >
-        </li>
-        <li>
-          <a href="Refinance_Comparison_Tool.html">Refinance Comparison Tool</a>
-        </li>
-        <li>
-          <a href="Tax_Proration_Code.html">Tax Proration Code</a>
-        </li>
-        <li>
-          <a href="VA_Bonus_Entitlement_Code.html">VA Bonus Entitlement Code</a>
-        </li>
-        <li>
-          <a href="Buydown_Calculator.html">Buydown Calculator</a>
-        </li>
-      </ul>
-      <div class="disclaimer">
-        <h3>Disclaimer</h3>
-        <p>
-          All calculations are estimates for informational use only and based on
-          data entered by the user. Results do not reflect guaranteed terms,
-          rates, or outcomes. Additional costs (e.g. PMI, FHA, VA, USDA fees)
-          may apply depending on loan structure. Provided by Konnectd as a
-          reference tool only.
-        </p>
+            <div class="icon">⏰</div>
+            <h3>Cost of Waiting Calculator</h3>
+            <p>Determine the cost of delaying your mortgage</p>
+          </a>
+
+          <a
+            href="Internal_Income_Calculator.html"
+            class="calculator-card"
+            data-calculator="Internal_Income_Calculator"
+          >
+            <div class="icon">📊</div>
+            <h3>Internal Income Calculator</h3>
+            <p>Calculate internal income for mortgage qualification</p>
+          </a>
+
+          <a
+            href="Refinance_Comparison_Tool.html"
+            class="calculator-card"
+            data-calculator="Refinance_Comparison_Tool"
+          >
+            <div class="icon">🔍</div>
+            <h3>Refinance Comparison Tool</h3>
+            <p>Compare refinancing options and potential savings</p>
+          </a>
+
+          <a
+            href="Tax_Proration_Code.html"
+            class="calculator-card"
+            data-calculator="Tax_Proration_Code"
+          >
+            <div class="icon">📝</div>
+            <h3>Tax Proration Code</h3>
+            <p>Calculate property tax prorations accurately</p>
+          </a>
+
+          <a
+            href="VA_Bonus_Entitlement_Code.html"
+            class="calculator-card"
+            data-calculator="VA_Bonus_Entitlement_Code"
+          >
+            <div class="icon">🎖️</div>
+            <h3>VA Bonus Entitlement Code</h3>
+            <p>Calculate VA loan bonus entitlement amounts</p>
+          </a>
+        </div>
       </div>
     </div>
-  </body>
-  <script>
-    //making it secureeee
-    // Disable right-click
-    document.addEventListener("contextmenu", function (e) {
-      e.preventDefault();
-    });
 
-    // Disable F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U, Ctrl+S, etc.
-    document.onkeydown = function (e) {
-      if (
-        e.key === "F12" ||
-        (e.ctrlKey &&
-          e.shiftKey &&
-          (e.key === "I" || e.key === "J" || e.key === "C")) ||
-        (e.ctrlKey && (e.key === "U" || e.key === "S"))
-      ) {
-        e.preventDefault();
-        return false;
-      }
-    };
-    // securing end
-  </script>
+    <footer>
+      <p>© 2023 Mortgage Calculators | Secure Authentication System</p>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const authStatus = document.getElementById("auth-status");
+        const calculatorsSection = document.getElementById("calculators-section");
+
+        // Get location ID from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const locationId = urlParams.get("location");
+
+        if (!locationId) {
+          showError(
+            "No location ID provided in URL. Please access this page with a valid location ID parameter."
+          );
+          return;
+        }
+
+        // Store the location ID in sessionStorage for other pages to use
+        sessionStorage.setItem("locationId", locationId);
+
+        // Validate the location ID
+        validateLocationId(locationId);
+
+        function validateLocationId(locationId) {
+          // Call the GoHighLevel API to validate the location ID
+          fetch("https://rest.gohighlevel.com/v1/locations/", {
+            headers: {
+              Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb21wYW55X2lkIjoiWENSOHJNbzFLYlVQaGo1S1J2SlYiLCJ2ZXJzaW9uIjoxLCJpYXQiOjE3Mzc4MjM0NjMxNzYsInN1YiI6ImtTQk5vcDgzaTZPQWsySnJYUFh5In0.VkPiQRUZZ6-2jQuE6AehWyLbBjdv_t6-NXq9xEAKs5Y",
+            },
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("API request failed");
+              }
+              return response.json();
+            })
+            .then((data) => {
+              const locationIds = data.locations.map((loc) => loc.id);
+              const isValid = locationIds.includes(locationId);
+              
+              if (isValid) {
+                showSuccess("Location ID validated successfully!");
+                showCalculators(locationId);
+              } else {
+                showError(
+                  "Invalid location ID. Please check your URL and try again."
+                );
+              }
+            })
+            .catch((error) => {
+              console.error("Authentication error:", error);
+              showError(
+                "Authentication service temporarily unavailable. Please try again later."
+              );
+            });
+        }
+
+        function showCalculators(locationId) {
+          // Update all calculator links with the valid location ID
+          const links = calculatorsSection.querySelectorAll("a");
+          links.forEach((link) => {
+            const href = link.getAttribute("href");
+            link.setAttribute("href", `${href}?location=${locationId}`);
+          });
+
+          // Show the calculators section
+          calculatorsSection.style.display = "grid";
+        }
+
+        function showSuccess(message) {
+          authStatus.className = "auth-status auth-success";
+          authStatus.innerHTML = `<span>✅ ${message}</span>`;
+        }
+
+        function showError(message) {
+          authStatus.className = "auth-status auth-error";
+          authStatus.innerHTML = `<span>❌ ${message}</span>`;
+        }
+      });
+    </script>
+  </body>
 </html>

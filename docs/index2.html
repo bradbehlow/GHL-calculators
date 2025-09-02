@@ -253,9 +253,7 @@
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         const authStatus = document.getElementById("auth-status");
-        const calculatorsSection = document.getElementById(
-          "calculators-section"
-        );
+        const calculatorsSection = document.getElementById("calculators-section");
 
         // Get location ID from URL parameters
         const urlParams = new URLSearchParams(window.location.search);
@@ -271,39 +269,16 @@
         // Store the location ID in sessionStorage for other pages to use
         sessionStorage.setItem("locationId", locationId);
 
-        // First, get the API token from our serverless function
-        getApiToken()
-          .then(({ accessToken, companyId }) => {
-            // Then validate the location ID with the new API
-            validateLocationId(locationId, accessToken, companyId);
+        // Validate the location ID
+        validateLocationId(locationId);
+
+        function validateLocationId(locationId) {
+          // Call the GoHighLevel API to validate the location ID
+          fetch("https://rest.gohighlevel.com/v1/locations/", {
+            headers: {
+              Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb21wYW55X2lkIjoiWENSOHJNbzFLYlVQaGo1S1J2SlYiLCJ2ZXJzaW9uIjoxLCJpYXQiOjE3Mzc4MjM0NjMxNzYsInN1YiI6ImtTQk5vcDgzaTZPQWsySnJYUFh5In0.VkPiQRUZZ6-2jQuE6AehWyLbBjdv_t6-NXq9xEAKs5Y",
+            },
           })
-          .catch((error) => {
-            console.error("Error getting API token:", error);
-            showError(
-              "Authentication service temporarily unavailable. Please try again later."
-            );
-          });
-
-        function getApiToken() {
-          return fetch("/.netlify/functions/get-token").then((response) => {
-            if (!response.ok) {
-              throw new Error("Failed to get API token");
-            }
-            return response.json();
-          });
-        }
-
-        function validateLocationId(locationId, accessToken, companyId) {
-          // Call the new API to validate the location ID
-          fetch(
-            `https://services.leadconnectorhq.com/locations/search?companyId=${companyId}`,
-            {
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-                Version: "2021-07-28",
-              },
-            }
-          )
             .then((response) => {
               if (!response.ok) {
                 throw new Error("API request failed");
@@ -311,11 +286,9 @@
               return response.json();
             })
             .then((data) => {
-              // Extract location IDs from the response
-              // Note: You'll need to adjust this based on the actual API response structure
               const locationIds = data.locations.map((loc) => loc.id);
               const isValid = locationIds.includes(locationId);
-
+              
               if (isValid) {
                 showSuccess("Location ID validated successfully!");
                 showCalculators(locationId);

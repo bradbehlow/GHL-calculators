@@ -4,7 +4,7 @@
   // Function to validate location ID against the API
   function validateLocationId(locationId) {
     return fetch(
-      "https://services.leadconnectorhq.com/locations/search?companyId=XCR8rMo1KbUPhj5KRvJV",
+      "https://services.leadconnectorhq.com/locations/search?companyId=XCR8rMo1KbUPhj5KRvJV?limit=600",
       {
         headers: {
           Authorization: "Bearer pit-3cb857a2-4537-42f7-ae6b-ef2ceb9cca61",

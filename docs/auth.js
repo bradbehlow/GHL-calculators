@@ -3,12 +3,15 @@
 (function () {
   // Function to validate location ID against the API
   function validateLocationId(locationId) {
-    return fetch("https://rest.gohighlevel.com/v1/locations/", {
-      headers: {
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb21wYW55X2lkIjoiWENSOHJNbzFLYlVQaGo1S1J2SlYiLCJ2ZXJzaW9uIjoxLCJpYXQiOjE3Mzc4MjM0NjMxNzYsInN1YiI6ImtTQk5vcDgzaTZPQWsySnJYUFh5In0.VkPiQRUZZ6-2jQuE6AehWyLbBjdv_t6-NXq9xEAKs5Y",
-      },
-    })
+    return fetch(
+      "https://services.leadconnectorhq.com/locations/search?companyId=XCR8rMo1KbUPhj5KRvJV",
+      {
+        headers: {
+          Authorization: "Bearer pit-3cb857a2-4537-42f7-ae6b-ef2ceb9cca61",
+          Version: "2021-07-28",
+        },
+      }
+    )
       .then((response) => {
         if (!response.ok) {
           throw new Error("API request failed");

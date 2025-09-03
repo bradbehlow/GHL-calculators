@@ -116,7 +116,7 @@
 //   });
 // })();
 
-
+// auth.js - Authentication for calculator pages
 
 // auth.js - Authentication for calculator pages
 
@@ -204,7 +204,7 @@
     // Check for bypass parameter first
     const urlParams = new URLSearchParams(window.location.search);
     const bypass = urlParams.get("bypass");
-    
+
     // If bypass parameter is set to 'true', skip authentication
     if (bypass === "true") {
       console.log("Bypass mode activated - skipping location validation");
@@ -244,9 +244,6 @@
       });
   });
 })();
-
-
-
 
 // auth.js - Authentication for calculator pages
 

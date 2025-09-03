@@ -502,15 +502,28 @@
     </div>
 
     <script>
-      const urlParams = new URLSearchParams(window.location.search);
-      const locationId = urlParams.get("location");
+      function getLocationId() {
+        const urlParams = new URLSearchParams(window.location.search);
+        let locationId = urlParams.get("location");
+        // Fallback to regex if needed
+        if (!locationId) {
+          const regex = new RegExp("[?&]location=([^&#]*)");
+          const match = regex.exec(window.location.href);
+          locationId = match ? decodeURIComponent(match[1]) : null;
+        }
+        return locationId;
+      }
+      const locationId = getLocationId();
+      if (locationId) {
+        console.log("Location ID found:", locationId);
+        // Use locationId in your logic
+      } else {
+        console.error("Location ID not found in URL");
+      }
+
       console.log(
-        "Location IDoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo:",
-        locationId
-      );
-      console.log(
-        "URLoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo:",
-        urlParams
+        "URL Parametersoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo:",
+        window.location.search
       );
     </script>
 

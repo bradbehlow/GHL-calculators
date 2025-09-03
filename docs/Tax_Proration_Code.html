@@ -502,6 +502,15 @@
     </div>
 
     <script>
+      const urlParams = new URLSearchParams(window.location.search);
+      const locationId = urlParams.get("location");
+      console.log(
+        "Location IDoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo:",
+        locationId
+      );
+    </script>
+
+    <script>
       document
         .getElementById("proration-form")
         .addEventListener("submit", function (event) {
@@ -659,17 +668,6 @@
         }
       });
       // securing end
-    </script>
-    <script>
-      function getLocationIdFromUrl() {
-        const params = new URLSearchParams(window.location.search);
-        return params.get("location_id");
-      }
-
-      const LOCATION_ID =
-        getLocationIdFromUrl() || "{{ custom_values.location_id }}";
-
-      console.log("Location ID000000000000000000000000000000:", LOCATION_ID);
     </script>
   </body>
 </html>

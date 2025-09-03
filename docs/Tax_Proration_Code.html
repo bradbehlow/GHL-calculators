@@ -661,7 +661,13 @@
       // securing end
     </script>
     <script>
-      const LOCATION_ID = "{{ custom_values.location_id }}";
+      function getLocationIdFromUrl() {
+        const params = new URLSearchParams(window.location.search);
+        return params.get("location_id");
+      }
+
+      const LOCATION_ID =
+        getLocationIdFromUrl() || "{{ custom_values.location_id }}";
 
       console.log("Location ID000000000000000000000000000000:", LOCATION_ID);
     </script>

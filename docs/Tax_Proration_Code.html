@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tax Proration Calculator</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -394,9 +398,19 @@
           padding: 20px 15px;
         }
       }
+
+      .location-info {
+        background-color: #e8f4fd;
+        padding: 10px;
+        border-radius: 4px;
+        margin-bottom: 15px;
+        font-size: 14px;
+        color: #2c5282;
+        text-align: center;
+        display: none;
+      }
     </style>
   </head>
-  <script src="auth.js"></script>
   <body>
     <div class="container">
       <div class="qr-promo-container">
@@ -412,6 +426,11 @@
           </div>
         </div>
       </div>
+
+      <div class="location-info" id="locationInfo">
+        Location ID detected: <span id="locationIdValue"></span>
+      </div>
+
       <!-- now the modal popup ===================================================-->
       <!-- Embed Button -->
       <button class="embed-button" id="embedButton">
@@ -441,7 +460,7 @@
               <div class="code-container">
                 <button class="copy-button" id="copyBtn">Copy</button>
                 <pre class="code-block" id="codeBlock">
-                  &lt;iframe src="https://calculators.konnectd.io/Tax_Proration_Code.html?location={{location.id}}" width="100%" height="800" frameborder="0" style="border: none;"&gt;&lt;/iframe&gt;</pre
+                  &lt;iframe src="https://calculators.konnectd.io/Tax_Proration_Code.html?location=LOCATION_ID_PLACEHOLDER" width="100%" height="800" frameborder="0" style="border: none;"&gt;&lt;/iframe&gt;</pre
                 >
               </div>
             </div>
@@ -502,32 +521,37 @@
     </div>
 
     <script>
-      function getLocationId() {
-        const urlParams = new URLSearchParams(window.location.search);
-        let locationId = urlParams.get("location");
-        // Fallback to regex if needed
-        if (!locationId) {
-          const regex = new RegExp("[?&]location=([^&#]*)");
-          const match = regex.exec(window.location.href);
-          locationId = match ? decodeURIComponent(match[1]) : null;
+      // Function to get URL parameters
+      function getUrlParameter(name) {
+        name = name.replace(/[\[\]]/g, "\\$&");
+        const regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)");
+        const results = regex.exec(window.location.href);
+        if (!results) return null;
+        if (!results[2]) return "";
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+      }
+
+      // Get location ID from URL
+      const locationId = getUrlParameter("locationid");
+
+      // Update the embed code with the actual location ID
+      function updateEmbedCode() {
+        if (locationId) {
+          const codeBlock = document.getElementById("codeBlock");
+          const embedCode = `&lt;iframe src="https://calculators.konnectd.io/Tax_Proration_Code.html?location=${locationId}" width="100%" height="800" frameborder="0" style="border: none;"&gt;&lt;/iframe&gt;`;
+          codeBlock.textContent = embedCode;
+
+          // Show location info
+          document.getElementById("locationIdValue").textContent = locationId;
+          document.getElementById("locationInfo").style.display = "block";
         }
-        return locationId;
-      }
-      const locationId = getLocationId();
-      if (locationId) {
-        console.log("Location ID found:", locationId);
-        // Use locationId in your logic
-      } else {
-        console.error("Location ID not found in URL");
       }
 
-      console.log(
-        "URL Parametersoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo:",
-        window.location.search
-      );
-    </script>
+      // Update embed code when page loads
+      document.addEventListener("DOMContentLoaded", function () {
+        updateEmbedCode();
+      });
 
-    <script>
       document
         .getElementById("proration-form")
         .addEventListener("submit", function (event) {

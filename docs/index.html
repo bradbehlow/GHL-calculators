@@ -119,6 +119,13 @@
         border-radius: 3px;
         font-family: monospace;
       }
+      .bypass-info {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 15px;
+        margin: 25px 0;
+        border-radius: 4px;
+      }
       .loading-spinner {
         display: inline-block;
         width: 30px;
@@ -166,7 +173,7 @@
           <span>Verifying your location ID...</span>
         </div>
 
-        <div class="url-info">
+        <!-- <div class="url-info">
           <p>
             This page validates your location ID passed through the URL. Example
             valid URL format:
@@ -175,6 +182,35 @@
             <code
               >https://calculators.connected.io/index.html?location=hpYWXdHJSatXsaZrFlau</code
             >
+          </p>
+        </div> -->
+        <div class="url-info">
+          <p>
+            Iframe usage will be checked, and if youre inside the accound, then
+            you can access the calculators directly.
+          </p>
+          <p>
+            <!-- <code></code> -->
+          </p>
+        </div>
+
+        <!-- <div class="bypass-info">
+          <p>
+            To bypass authentication, add <code>bypass=true</code> to the URL
+            parameters:
+          </p>
+          <p>
+            <code>https://calculators.connected.io/index.html?bypass=true</code>
+          </p>
+        </div> -->
+
+        <div class="bypass-info">
+          <p>
+            If you're a member, can use directly, otherwise call
+            <code>admin</code>
+          </p>
+          <p>
+            <!-- <code>https://calculators.connected.io/index.html?bypass=true</code> -->
           </p>
         </div>
 
@@ -257,9 +293,18 @@
           "calculators-section"
         );
 
-        // Get location ID from URL parameters
+        // Get URL parameters
         const urlParams = new URLSearchParams(window.location.search);
+        const bypass = urlParams.get("bypass");
         const locationId = urlParams.get("location");
+
+        // If bypass parameter is set to 'true', skip authentication
+        if (bypass === "true") {
+          console.log("Bypass mode activated - skipping location validation");
+          showSuccess("Bypass mode activated - access granted");
+          showCalculators("bypass");
+          return;
+        }
 
         if (!locationId) {
           showError(
@@ -314,11 +359,15 @@
         }
 
         function showCalculators(locationId) {
-          // Update all calculator links with the valid location ID
+          // Update all calculator links with the valid location ID or bypass
           const links = calculatorsSection.querySelectorAll("a");
           links.forEach((link) => {
             const href = link.getAttribute("href");
-            link.setAttribute("href", `${href}?location=${locationId}`);
+            if (locationId === "bypass") {
+              link.setAttribute("href", `${href}?bypass=true`);
+            } else {
+              link.setAttribute("href", `${href}?location=${locationId}`);
+            }
           });
 
           // Show the calculators section

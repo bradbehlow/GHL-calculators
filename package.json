@@ -1,8 +1,0 @@
-{
-  "name": "mortgage-calculators",
-  "version": "1.0.0",
-  "description": "Mortgage calculators with secure authentication",
-  "dependencies": {
-    "mongodb": "^4.5.0"
-  }
-}

@@ -609,11 +609,29 @@
         }
       }
 
-      /* Embed button styles */
+      /* Embed button styles 
       .embed-button {
         position: relative;
-        bottom: 100px;
-        left: 900px;
+        top: -80px; /* moves it upward *
+        margin: -50px 0 -80px 800px;
+        margin-bottom: -60px;
+        padding: 8px;
+        background: linear-gradient(135deg, #adade2, #41335e);
+        border-radius: 8px;
+        padding: 10px 20px;
+        font-size: 14px;
+        font-weight: 600;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        width: fit-content;
+        color: white;
+        max-width: 200px;
+      }
+      */
+      .embed-button {
+        position: absolute;
+        top: 70px;
+        right: 50px;
         background: linear-gradient(135deg, #adade2, #41335e);
         color: white;
         border: none;
@@ -634,20 +652,13 @@
       /* 📱 Mobile screens */
       @media (max-width: 768px) {
         .embed-button {
+          position: relative;
           left: 43%; /* Center horizontally */
           transform: translateX(-7%);
-          bottom: 10px; /* Adjust if needed */
+          top: -10px; /* Adjust if needed */
           font-size: 12px; /* Slightly smaller text */
-          padding: 12px 16px;
-        }
-      }
-
-      /* 📱 Extra small screens */
-      @media (max-width: 480px) {
-        .embed-button {
-          bottom: 30px; /* Bring closer */
-          font-size: 11px;
-          padding: 6px 14px;
+          padding: 10px 10px;
+          margin-bottom: 25px;
         }
       }
     </style>
@@ -673,14 +684,14 @@
       <!-- Embed Button -->
       <button class="embed-button" id="embedButton">
         <!-- <i class="fas fa-code mr-2"></i> -->
-        Get Code
+        Add to Website
       </button>
 
       <!-- Modal -->
       <div class="modal-overlay" id="modalOverlay">
         <div class="modal-container">
           <div class="modal-header">
-            <h2 class="modal-title">Get Code</h2>
+            <h2 class="modal-title">Add to Website</h2>
             <button class="close-button" id="closeModalBtn">&times;</button>
           </div>
 
@@ -699,9 +710,9 @@
               <div class="code-container">
                 <button class="copy-button" id="copyBtn">Copy</button>
                 <pre class="code-block" id="codeBlock">
-                    &lt;iframe src="https://calculators.konnectd.io/Cost_Of_Waiting_Calculator.html?location=LOCATION_ID_PLACEHOLDER" width="100%" height="800" frameborder="0" style="border: none;"&gt;&lt;/iframe&gt;
-                  </pre
-                >
+                    <!-- &lt;iframe src="https://calculators.konnectd.io/Cost_Of_Waiting_Calculator.html?location=LOCATION_ID_PLACEHOLDER" width="100%" height="800" frameborder="0" style="border: none;"&gt;&lt;/iframe&gt; -->
+                     https://calculators.konnectd.io/Cost_Of_Waiting_Calculator.html?location=LOCATION_ID_PLACEHOLDER
+                  </pre>
               </div>
             </div>
 
@@ -1923,7 +1934,7 @@
         if (locationId) {
           const codeBlock = document.getElementById("codeBlock");
           if (codeBlock) {
-            const embedCode = `&lt;iframe src="https://calculators.konnectd.io/Cost_Of_Waiting_Calculator.html?location=${locationId}" width="100%" height="800" frameborder="0" style="border: none;"&gt;&lt;/iframe&gt;`;
+            const embedCode = `https://calculators.konnectd.io/Cost_Of_Waiting_Calculator.html?location=${locationId}`;
             codeBlock.textContent = embedCode;
           }
         }

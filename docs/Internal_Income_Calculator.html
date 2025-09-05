@@ -991,14 +991,14 @@
       <!-- Embed Button -->
       <button class="embed-button" id="embedButton">
         <!-- <i class="fas fa-code mr-2"></i> -->
-        Get Code
+        Add to Website
       </button>
 
       <!-- Modal -->
       <div class="modal-overlay" id="modalOverlay">
         <div class="modal-container">
           <div class="modal-header">
-            <h2 class="modal-title">Get Code</h2>
+            <h2 class="modal-title">Add to Website</h2>
             <button class="close-button" id="closeModalBtn">&times;</button>
           </div>
 
@@ -1017,7 +1017,9 @@
               <div class="code-container">
                 <button class="copy-button" id="copyBtn">Copy</button>               
                   <pre class="code-block" id="codeBlock">
-                    &lt;iframe src="https://calculators.konnectd.io/Internal_Income_Calculator.html?location=LOCATION_ID_PLACEHOLDER" width="100%" height="800" frameborder="0" style="border: none;"&gt;&lt;/iframe&gt;
+                    <!-- &lt;iframe src="https://calculators.konnectd.io/Internal_Income_Calculator.html?location=LOCATION_ID_PLACEHOLDER" width="100%" height="800" frameborder="0" style="border: none;"&gt;&lt;/iframe&gt;
+                   -->
+                    https://calculators.konnectd.io/VA_Bonus_Entitlement_Code.html?location=LOCATION_ID_PLACEHOLDER
                   </pre>
               </div>
             </div>
@@ -5338,7 +5340,7 @@
     if (locationId) {
       const codeBlock = document.getElementById('codeBlock');
       if (codeBlock) {
-        const embedCode = `&lt;iframe src="https://calculators.konnectd.io/Internal_Income_Calculator.html?location=${locationId}" width="100%" height="800" frameborder="0" style="border: none;"&gt;&lt;/iframe&gt;`;
+        const embedCode = `https://calculators.konnectd.io/Internal_Income_Calculator.html?location=${locationId}`;
         codeBlock.textContent = embedCode;
       }
     }

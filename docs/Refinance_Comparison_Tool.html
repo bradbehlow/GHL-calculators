@@ -2132,7 +2132,7 @@ function renderComparisonTable() {
     
     const rows = scenarios.map(s => {
         // Format numbers properly using your existing formatters
-        const rateFormatted = (s.inputs.newRate * 100).toFixed(3);
+        const rateFormatted = (s.inputs.newRate ).toFixed(3);
         const paymentFormatted = hm2_nftd.format(s.outputs.newPayment || 0);
         const monthlySavingsFormatted = hm2_nftd.format(s.outputs.monthlySavings || 0);
         const lifeSavingsFormatted = hm2_nftd.format(s.outputs.lifeSavings || 0);

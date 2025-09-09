@@ -5359,7 +5359,7 @@
   }
 
   // Get location ID from URL
-  const locationId = getUrlParameter("locationid");
+  const locationId = getUrlParameter("locationId");
 </script>
 <script>
   // Function to update embed code with actual location ID
@@ -5367,7 +5367,7 @@
     if (locationId) {
       const codeBlock = document.getElementById('codeBlock');
       if (codeBlock) {
-        const embedCode = `https://calculators.konnectd.io/Internal_Income_Calculator.html?location=${locationId}`;
+        const embedCode = `https://calculators.konnectd.io/Internal_Income_Calculator.html?location=${locationId}&embedded=true`;
         codeBlock.textContent = embedCode;
       }
     }

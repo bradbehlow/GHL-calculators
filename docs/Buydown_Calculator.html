@@ -1402,7 +1402,7 @@
       }
 
       // Get location ID from URL
-      const locationId = getUrlParameter("locationid");
+      const locationId = getUrlParameter("locationId");
     </script>
 
     <script>
@@ -1411,7 +1411,7 @@
         if (locationId) {
           const codeBlock = document.getElementById("codeBlock");
           if (codeBlock) {
-            const embedCode = `https://calculators.konnectd.io/Buydown_Calculator.html?location=${locationId}`;
+            const embedCode = `https://calculators.konnectd.io/Buydown_Calculator.html?location=${locationId}&embedded=true`;
             codeBlock.textContent = embedCode;
           }
         }

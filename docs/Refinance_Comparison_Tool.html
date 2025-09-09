@@ -2548,7 +2548,7 @@ $('#addTab').on('click', function() {
   }
 
   // Get location ID from URL
-  const locationId = getUrlParameter("locationid");
+  const locationId = getUrlParameter("locationId");
 </script>
 <script>
   // Function to update embed code with actual location ID
@@ -2556,7 +2556,7 @@ $('#addTab').on('click', function() {
     if (locationId) {
       const codeBlock = document.getElementById('codeBlock');
       if (codeBlock) {
-        const embedCode = `https://calculators.konnectd.io/Refinance_Comparison_Tool.html?location=${locationId}`;
+        const embedCode = `https://calculators.konnectd.io/Refinance_Comparison_Tool.html?location=${locationId}&embedded=true`;
         codeBlock.textContent = embedCode;
       }
     }
@@ -2565,5 +2565,31 @@ $('#addTab').on('click', function() {
   // Update embed code when page loads
   document.addEventListener('DOMContentLoaded', updateEmbedCode);
 </script>
+<script>
+      // Check for embedded parameter and hide elements if true
+      function checkEmbeddedMode() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const embedded = urlParams.get("embedded");
+
+        if (embedded === "true") {
+          // Hide QR code
+          const qrContainer = document.querySelector(".qr-promo-container");
+          if (qrContainer) {
+            qrContainer.style.display = "none";
+          }
+
+          // Hide embed button
+          const embedButton = document.querySelector(".embed-button");
+          if (embedButton) {
+            embedButton.style.display = "none";
+          }
+        }
+      }
+
+      // Run when DOM is loaded
+      document.addEventListener("DOMContentLoaded", function () {
+        checkEmbeddedMode();
+      });
+    </script>
 
 </html>

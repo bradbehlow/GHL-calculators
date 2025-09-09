@@ -596,7 +596,7 @@
                 <pre class="code-block" id="codeBlock">
                   <!-- &lt;iframe src="https://calculators.konnectd.io/Buydown_Calculator.html?location=LOCATION_ID_PLACEHOLDER" width="100%" height="800" frameborder="0" style="border: none;"&gt;&lt;/iframe&gt;
                  -->
-                  https://calculators.konnectd.io/VA_Bonus_Entitlement_Code.html?location=LOCATION_ID_PLACEHOLDER
+                  https://calculators.konnectd.io/Buydown_Calculator.html?location=LOCATION_ID_PLACEHOLDER
                 </pre>
               </div>
             </div>
@@ -1419,6 +1419,32 @@
 
       // Update embed code when page loads
       document.addEventListener("DOMContentLoaded", updateEmbedCode);
+    </script>
+    <script>
+      // Check for embedded parameter and hide elements if true
+      function checkEmbeddedMode() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const embedded = urlParams.get("embedded");
+
+        if (embedded === "true") {
+          // Hide QR code
+          const qrContainer = document.querySelector(".qr-promo-container");
+          if (qrContainer) {
+            qrContainer.style.display = "none";
+          }
+
+          // Hide embed button
+          const embedButton = document.querySelector(".embed-button");
+          if (embedButton) {
+            embedButton.style.display = "none";
+          }
+        }
+      }
+
+      // Run when DOM is loaded
+      document.addEventListener("DOMContentLoaded", function () {
+        checkEmbeddedMode();
+      });
     </script>
   </body>
 </html>
